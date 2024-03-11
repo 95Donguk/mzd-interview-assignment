@@ -62,4 +62,8 @@ public class Profile extends BaseEntity {
         this.profileStatus = profileStatus;
         return this;
     }
+
+    public void updateProfileStatus(final ProfileStatus profileStatus) {
+        this.profileStatus = profileStatus;
+    }
 }
