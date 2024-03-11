@@ -2,15 +2,15 @@
 
 ### API
 
-|    구분     |    내용     |        Method        |                                 URI                                 |
-|:---------:|:---------:|:--------------------:|:-------------------------------------------------------------------:|
-|    회원     | 회원 생성 API |    POST    |                            /api/members                             |
-|    회원     | 회원 삭제 API |      DELETE      |                      /api/members/{member_no}                       |
-|    회원     |   회원 전체 조회 API    | GET | /api/members?page={page_no}&size={members_count}&name={member_name} |
-|    회원     |    회원 상세 조회 API    |    GET     |                      /api/members/{member_no}                       |
-|  회원 프로필   |   회원 프로필 생성 API    |      POST       |                  /api/members/{member_no}/profiles                  |
-|  회원 프로필   |   회원 프로필 수정 API    |    PUT    |           /api/members/{member_no}/profiles/{profile_no}            |
-|  회원 프로필   |    회원 프로필 삭제 API    |    DELETE    |           /api/members/{member_no}/profiles/{profile_no}            |
+|    구분     |    내용     | Method |                                 URI                                 |
+|:---------:|:---------:|:------:|:-------------------------------------------------------------------:|
+|    회원     | 회원 생성 API |  POST  |                            /api/members                             |
+|    회원     | 회원 삭제 API | DELETE |                      /api/members/{member_no}                       |
+|    회원     |   회원 전체 조회 API    |  GET   | /api/members?page={page_no}&size={members_count}&name={member_name} |
+|    회원     |    회원 상세 조회 API    |  GET   |                      /api/members/{member_no}                       |
+|  회원 프로필   |   회원 프로필 생성 API    |  POST  |                  /api/members/{member_no}/profiles                  |
+|  회원 프로필   |   회원 프로필 수정 API    | PATCH  |           /api/members/{member_no}/profiles/{profile_no}            |
+|  회원 프로필   |    회원 프로필 삭제 API    | DELETE |           /api/members/{member_no}/profiles/{profile_no}            |
 
 ### ERD
 ![ERD](https://github.com/95Donguk/mzd-interview-assignment/assets/90694560/c17cab7c-887c-46a0-9bbe-7f251c2a2d71)
