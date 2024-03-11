@@ -5,11 +5,13 @@ import jakarta.validation.constraints.Pattern;
 import kr.co.mz.mzdinterviewassignment.domain.profile.Profile;
 import kr.co.mz.mzdinterviewassignment.domain.profile.ProfileStatus;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class UpdateProfileRequest {
     @Pattern(
         regexp = "^[가-힣a-zA-Z0-9-_]{2,8}$",

@@ -3,11 +3,13 @@ package kr.co.mz.mzdinterviewassignment.dto.request.member;
 import jakarta.validation.constraints.Pattern;
 import kr.co.mz.mzdinterviewassignment.domain.member.Member;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class CreateMemberRequest {
 
     @Pattern(regexp = "^[a-z\\d]{4,20}$",
