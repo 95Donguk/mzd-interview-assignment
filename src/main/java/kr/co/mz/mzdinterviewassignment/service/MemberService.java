@@ -62,7 +62,7 @@ public class MemberService {
     public Page<Member> findMembersContainName(final String name,
                                                final int page,
                                                final int size) {
-        log.info("이름이 {} 들어간 회원 전체 조회");
+        log.info("이름에 {} 들어간 회원 전체 조회");
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberNo"));
 
