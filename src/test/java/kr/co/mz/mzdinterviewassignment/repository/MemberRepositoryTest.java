@@ -24,11 +24,7 @@ class MemberRepositoryTest {
     @DisplayName("데이터베이스에 존재하지 않은 loginId로 회원 조회 테스트 ")
     void findByLoginId_HasNotLoginId_Test() {
 
-        Member member = Member.builder()
-            .loginId("testId")
-            .name("testName")
-            .password("testPassword")
-            .build();
+        Member member = generateMember();
 
         memberRepository.saveAndFlush(member);
 
@@ -39,11 +35,7 @@ class MemberRepositoryTest {
     @DisplayName("논리 삭제된 회원의 loginId 조회 테스트")
     void findByLoginId_DeletedMember_Test() {
 
-        Member member = Member.builder()
-            .loginId("testId")
-            .name("testName")
-            .password("testPassword")
-            .build();
+        Member member = generateMember();
 
         Member savedMember = memberRepository.saveAndFlush(member);
 
@@ -56,11 +48,7 @@ class MemberRepositoryTest {
     @DisplayName("loginId로 회원 조회 테스트 ")
     void findByLoginId_Test() {
 
-        Member member = Member.builder()
-            .loginId("testId")
-            .name("testName")
-            .password("testPassword")
-            .build();
+        Member member = generateMember();
 
         memberRepository.saveAndFlush(member);
 
@@ -76,13 +64,7 @@ class MemberRepositoryTest {
     @DisplayName("데이터베이스에 존재하지 않은 이름 키워드로 전체 회원 조회")
     void findMembersByNameContaining_HasNotName_Test() {
 
-        List<Member> members = IntStream.range(0, 10)
-            .mapToObj(i -> Member.builder()
-                .loginId("testId" + i)
-                .name("testName" + i)
-                .password("testPassword" + i)
-                .build())
-            .toList();
+        List<Member> members = generateMembers();
 
         memberRepository.saveAllAndFlush(members);
 
@@ -97,13 +79,7 @@ class MemberRepositoryTest {
     @DisplayName("데이터베이스에 논리 삭제된 회원의 이름 키워드로 전체 회원 조회")
     void findMembersByNameContaining_DeletedMember_Test() {
 
-        List<Member> members = IntStream.range(0, 10)
-            .mapToObj(i -> Member.builder()
-                .loginId("testId" + i)
-                .name("testName" + i)
-                .password("testPassword" + i)
-                .build())
-            .toList();
+        List<Member> members = generateMembers();
 
         List<Member> savedMembers = memberRepository.saveAllAndFlush(members);
 
@@ -121,13 +97,7 @@ class MemberRepositoryTest {
     @DisplayName("이름 키워드로 전체 회원 조회")
     void findMembersByNameContaining_Test() {
 
-        List<Member> members = IntStream.range(0, 30)
-            .mapToObj(i -> Member.builder()
-                .loginId("testId" + i)
-                .name("testName" + i)
-                .password("testPassword" + i)
-                .build())
-            .toList();
+        List<Member> members = generateMembers();
 
         memberRepository.saveAllAndFlush(members);
 
@@ -138,5 +108,23 @@ class MemberRepositoryTest {
 
         findMembers.forEach(member -> assertThat(member.getName()).contains("testName"));
         assertThat(findMembers.getContent()).hasSize(10);
+    }
+
+    private static Member generateMember() {
+        return Member.builder()
+            .loginId("testId")
+            .name("testName")
+            .password("testPassword")
+            .build();
+    }
+
+    private static List<Member> generateMembers() {
+        return IntStream.range(0, 30)
+            .mapToObj(i -> Member.builder()
+                .loginId("testId" + i)
+                .name("testName" + i)
+                .password("testPassword" + i)
+                .build())
+            .toList();
     }
 }
