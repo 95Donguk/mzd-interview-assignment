@@ -130,22 +130,6 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("회원 전체 조회 테스트")
-    void findMembers_Test() {
-        Page<Member> members = generatePageMembers();
-
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "memberNo"));
-
-        Mockito.when(memberRepository.findAll(pageRequest))
-            .thenReturn(members);
-
-        Page<Member> result = memberService.findMembers(0, 10);
-
-        assertThat(result.getContent()).hasSize(10);
-        Mockito.verify(memberRepository, Mockito.times(1)).findAll(pageRequest);
-    }
-
-    @Test
     @DisplayName("이름 검색 키워드 회원 전체 조회")
     void findMembersByNameContaining_Test() {
         Page<Member> members = generatePageMembers();

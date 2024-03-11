@@ -51,14 +51,6 @@ public class MemberService {
             .orElseThrow(() -> new NotFoundMemberException(memberNo));
     }
 
-    public Page<Member> findMembers(final int page, final int size) {
-        log.info("회원 전체 조회");
-
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberNo"));
-
-        return memberRepository.findAll(pageRequest);
-    }
-
     public Page<Member> findMembersContainName(final String name,
                                                final int page,
                                                final int size) {
