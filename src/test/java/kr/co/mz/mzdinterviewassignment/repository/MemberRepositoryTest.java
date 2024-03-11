@@ -94,6 +94,24 @@ class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("\"\" 키워드로 전체 회원 조회")
+    void findMembersByNameContaining_LikeEmptyTest() {
+
+        List<Member> members = generateMembers();
+
+        memberRepository.saveAllAndFlush(members);
+
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "memberNo"));
+
+        Page<Member> findMembers =
+            memberRepository.findMembersByNameContaining("", pageRequest);
+
+        findMembers.forEach(member -> assertThat(member.getName()).contains("testName"));
+        assertThat(findMembers.getContent()).hasSize(10);
+    }
+
+
+    @Test
     @DisplayName("이름 키워드로 전체 회원 조회")
     void findMembersByNameContaining_Test() {
 
