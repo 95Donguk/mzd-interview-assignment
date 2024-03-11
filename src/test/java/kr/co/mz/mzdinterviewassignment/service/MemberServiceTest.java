@@ -47,7 +47,7 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.createMember(dto))
             .isInstanceOf(DuplicateLoginIdException.class);
 
-        Mockito.verify(memberRepository, Mockito.times(0)).save(any(Member.class));
+        Mockito.verify(memberRepository, Mockito.never()).save(any(Member.class));
     }
 
     @Test
