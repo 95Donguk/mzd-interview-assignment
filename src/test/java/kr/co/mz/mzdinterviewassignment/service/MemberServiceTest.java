@@ -37,11 +37,7 @@ class MemberServiceTest {
     @DisplayName("이미 중복된 아이디가 있을 시 회원 생성 실패 테스트")
     void createMember_DuplicateLoginId_Fail_Test() {
 
-        Member member = Member.builder()
-            .loginId("testId")
-            .name("testName")
-            .password("testPassword")
-            .build();
+        Member member = generateMember();
 
         CreateMemberRequest dto = new CreateMemberRequest("testId", "testName", "testPassword");
 
@@ -89,11 +85,7 @@ class MemberServiceTest {
     @DisplayName("회원 삭제 성공 테스트")
     void deleteMember_Success_Test() {
 
-        Member member = Member.builder()
-            .loginId("testId")
-            .name("testName")
-            .password("testPassword")
-            .build();
+        Member member = generateMember();
 
         Mockito.when(memberRepository.findById(1L))
             .thenReturn(Optional.of(member));
@@ -123,11 +115,7 @@ class MemberServiceTest {
     @DisplayName("회원 조회 성공 테스트")
     void findMember_Success_Test() {
 
-        Member member = Member.builder()
-            .loginId("testId")
-            .name("testName")
-            .password("testPassword")
-            .build();
+        Member member = generateMember();
 
         Mockito.when(memberRepository.findById(1L))
             .thenReturn(Optional.of(member));
@@ -144,13 +132,7 @@ class MemberServiceTest {
     @Test
     @DisplayName("회원 전체 조회 테스트")
     void findMembers_Test() {
-        Page<Member> members = new PageImpl<>(IntStream.range(1, 11)
-            .mapToObj(i -> Member.builder()
-                .loginId("testId" + i)
-                .name("testName" + i)
-                .password("testPassword" + i)
-                .build())
-            .toList());
+        Page<Member> members = generatePageMembers();
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "memberNo"));
 
@@ -166,13 +148,7 @@ class MemberServiceTest {
     @Test
     @DisplayName("이름 검색 키워드 회원 전체 조회")
     void findMembersByNameContaining_Test() {
-        Page<Member> members = new PageImpl<>(IntStream.range(1, 11)
-            .mapToObj(i -> Member.builder()
-                .loginId("testId" + i)
-                .name("testName" + i)
-                .password("testPassword" + i)
-                .build())
-            .toList());
+        Page<Member> members = generatePageMembers();
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "memberNo"));
 
@@ -182,5 +158,23 @@ class MemberServiceTest {
 
         assertThat(result.getContent()).hasSize(10);
         Mockito.verify(memberRepository, Mockito.times(1)).findMembersByNameContaining("testName", pageRequest);
+    }
+
+    private static PageImpl<Member> generatePageMembers() {
+        return new PageImpl<>(IntStream.range(1, 11)
+            .mapToObj(i -> Member.builder()
+                .loginId("testId" + i)
+                .name("testName" + i)
+                .password("testPassword" + i)
+                .build())
+            .toList());
+    }
+
+    private static Member generateMember() {
+        return Member.builder()
+            .loginId("testId")
+            .name("testName")
+            .password("testPassword")
+            .build();
     }
 }
