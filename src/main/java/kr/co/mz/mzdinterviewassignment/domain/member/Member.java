@@ -28,17 +28,17 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberNo;
 
-    @NotNull
+    @NotNull(message = "로그인 아이디는 필수입니다")
     @Column(unique = true)
     private String loginId;
 
-    @NotNull
+    @NotNull(message = "이름은 필수입니다")
     private String name;
 
-    @NotNull
+    @NotNull(message = "비밀번호는 필수입니다")
     private String password;
 
-    @NotNull
+    @NotNull(message = "회원 상태는 필수입니다")
     @Enumerated(EnumType.STRING)
     @Comment("ACTIVE: 계정 활성, DELETED: 계정 탈퇴")
     private MemberStatus memberStatus;
