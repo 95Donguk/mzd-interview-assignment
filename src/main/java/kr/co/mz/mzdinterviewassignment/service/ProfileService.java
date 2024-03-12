@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProfileService {
-    private ProfileRepository profileRepository;
+    private final ProfileRepository profileRepository;
 
     @Transactional
     public ProfileResponse createProfile(final CreateProfileRequest dto, final Member member) {
@@ -57,8 +57,9 @@ public class ProfileService {
                 .forEach(p -> p.updateProfileStatus(ProfileStatus.NORMAL));
         }
 
-        Profile updatedProfile = profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
-            dto.getProfileStatus());
+        Profile updatedProfile =
+            profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
+                dto.getProfileStatus());
 
         log.info("프로필 수정 완료");
         return ProfileResponse.generateProfile(updatedProfile);
@@ -84,10 +85,10 @@ public class ProfileService {
 
         Profile profile =
             profileRepository.findProfileByMemberAndProfileStatus(member, ProfileStatus.MAIN)
-                .orElseGet(() ->profileRepository.findAllByMember(member)
+                .orElseGet(() -> profileRepository.findAllByMember(member)
                     .stream().findFirst()
                     .orElseThrow(() -> new EmptyProfileException(member.getMemberNo())
-                ));
+                    ));
 
         log.info("{} 의 메인 프로필 조회 완료", member.getLoginId());
 
@@ -95,12 +96,18 @@ public class ProfileService {
     }
 
     public List<ProfileResponse> findProfiles(final Member member) {
-        log.info("{} 의 프로필 조회");
+        log.info("{} 의 프로필 조회", member.getLoginId());
 
-        return profileRepository.findAllByMember(member)
+        List<ProfileResponse> responses = profileRepository.findAllByMember(member)
             .stream()
             .map(ProfileResponse::generateProfile)
             .toList();
+
+        if (responses.isEmpty()) {
+            throw new EmptyProfileException(member.getMemberNo());
+        }
+
+        return responses;
     }
 
     private boolean isMainProfile(final ProfileStatus profileStatus) {

@@ -24,24 +24,30 @@ public class MemberService {
 
     @Transactional
     public MemberResponse createMember(final CreateMemberRequest dto) {
+        log.info("회원 생성 시작");
 
         if (hasDuplicateLoginId(dto.getLoginId())) {
             throw new DuplicateLoginIdException(dto.getLoginId());
         }
 
         Member member = memberRepository.save(dto.toEntity());
+        log.info("회원 생성 성공");
         return MemberResponse.generateMemberResponse(member);
     }
 
     private boolean hasDuplicateLoginId(final String loginId) {
+        log.info("중복된 아이디가 있는지 확인");
         return memberRepository.findByLoginId(loginId).isPresent();
     }
 
     @Transactional
     public String deleteMember(final Long memberNo) {
+        log.info("회원 삭제 시작");
+        
         Member member = memberRepository.findById(memberNo)
             .orElseThrow(() -> new NotFoundMemberException(memberNo));
 
+        log.info("회원 삭제 성공");
         return member.delete();
     }
 
@@ -56,7 +62,8 @@ public class MemberService {
                                                final int size) {
         log.info("이름에 {} 들어간 회원 전체 조회");
 
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberNo"));
+        PageRequest pageRequest =
+            PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberNo"));
 
         return memberRepository.findMembersByNameContaining(name, pageRequest);
     }
