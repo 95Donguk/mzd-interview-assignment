@@ -1,6 +1,5 @@
 package kr.co.mz.mzdinterviewassignment.repository;
 
-import jakarta.validation.constraints.NotNull;
 import java.util.Optional;
 import kr.co.mz.mzdinterviewassignment.domain.member.Member;
 import org.springframework.data.domain.Page;
