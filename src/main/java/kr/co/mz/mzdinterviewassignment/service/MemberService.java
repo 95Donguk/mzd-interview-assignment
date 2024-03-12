@@ -43,7 +43,7 @@ public class MemberService {
     @Transactional
     public String deleteMember(final Long memberNo) {
         log.info("회원 삭제 시작");
-        
+
         Member member = memberRepository.findById(memberNo)
             .orElseThrow(() -> new NotFoundMemberException(memberNo));
 
@@ -60,7 +60,7 @@ public class MemberService {
     public Page<Member> findMembersContainName(final String name,
                                                final int page,
                                                final int size) {
-        log.info("이름에 {} 들어간 회원 전체 조회");
+        log.info("이름에 {} 들어간 회원 전체 조회", name);
 
         PageRequest pageRequest =
             PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberNo"));

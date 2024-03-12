@@ -11,7 +11,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.util.Objects;
 import kr.co.mz.mzdinterviewassignment.domain.BaseEntity;
 import kr.co.mz.mzdinterviewassignment.domain.member.Member;
 import lombok.AccessLevel;
@@ -30,15 +29,15 @@ public class Profile extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileNo;
 
-    @NotNull(message = "별명은 필수입니다.")
+    @NotNull(message = "별명은 필수입니다")
     private String nickname;
 
-    @NotNull(message = "휴대전화 번호는 필수입니다.")
+    @NotNull(message = "휴대전화 번호는 필수입니다")
     private String phoneNumber;
 
     private String address;
 
-    @NotNull(message = "프로필 상태는 필수입니다.")
+    @NotNull(message = "프로필 상태는 필수입니다")
     @Enumerated(EnumType.STRING)
     @Comment("MAIN: 메인 프로필, NORMAL: 일반 프로필")
     private ProfileStatus profileStatus;
