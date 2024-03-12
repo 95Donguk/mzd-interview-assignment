@@ -87,7 +87,7 @@ public class ProfileService {
             profileRepository.findProfileByMemberAndProfileStatus(member, ProfileStatus.MAIN)
                 .orElseGet(() -> profileRepository.findAllByMember(member)
                     .stream().findFirst()
-                    .orElseThrow(() -> new EmptyProfileException(member.getMemberNo())
+                    .orElseThrow(() -> new EmptyProfileException(member.getLoginId())
                     ));
 
         log.info("{} 의 메인 프로필 조회 완료", member.getLoginId());
@@ -104,7 +104,7 @@ public class ProfileService {
             .toList();
 
         if (responses.isEmpty()) {
-            throw new EmptyProfileException(member.getMemberNo());
+            throw new EmptyProfileException(member.getLoginId());
         }
 
         return responses;
