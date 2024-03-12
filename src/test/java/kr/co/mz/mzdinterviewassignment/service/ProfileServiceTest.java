@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -265,6 +267,19 @@ class ProfileServiceTest {
 
         Mockito.verify(profileRepository, Mockito.times(1))
             .findProfileByMemberAndProfileStatus(any(Member.class), any(ProfileStatus.class));
+        Mockito.verify(profileRepository, Mockito.times(1)).findAllByMember(any(Member.class));
+    }
+
+    @Test
+    @DisplayName("프로필이 없는 회원의 전체 프로필 조회 시 실패 테스트")
+    void findProfiles_EmptyProfile_Fail_Test() {
+
+        Mockito.when(profileRepository.findAllByMember(any(Member.class)))
+            .thenReturn(Collections.emptyList());
+
+        assertThatThrownBy(() -> profileService.findProfiles(member))
+            .isInstanceOf(EmptyProfileException.class);
+
         Mockito.verify(profileRepository, Mockito.times(1)).findAllByMember(any(Member.class));
     }
 
