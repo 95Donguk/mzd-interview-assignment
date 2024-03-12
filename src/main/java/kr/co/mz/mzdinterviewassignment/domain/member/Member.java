@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mz.mzdinterviewassignment.domain.BaseEntity;
 import lombok.AccessLevel;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("member_status != 'DELETED'")
+@Table(name = "MEMBER_TBL")
 public class Member extends BaseEntity {
 
     @Id

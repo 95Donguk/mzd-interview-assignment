@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mz.mzdinterviewassignment.domain.BaseEntity;
 import kr.co.mz.mzdinterviewassignment.domain.member.Member;
@@ -21,6 +22,7 @@ import org.hibernate.annotations.Comment;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "PROFILE_TBL")
 public class Profile extends BaseEntity {
 
     @Id
