@@ -35,7 +35,7 @@ public class ProfileService {
         log.info("프로필 상태 {}", profileStatus.name());
 
         Profile savedProfile = profileRepository.save(dto.toEntity(profileStatus, member));
-        log.info("프로필 생성 완료 {}", savedProfile);
+        log.info("프로필 생성 완료 회원 식별 번호 : {}", savedProfile.getMember().getLoginId());
         return ProfileResponse.generateProfile(savedProfile);
     }
 
@@ -50,19 +50,28 @@ public class ProfileService {
 
         checkMatchMemberNo(member, profile);
 
-        if (isMainProfile(dto.getProfileStatus())) {
-            log.info("기존 메인 프로필을 일반 프로필로 전환");
-            profileRepository.findAllByMember(member)
-                .stream().filter(p -> p.getProfileStatus().equals(ProfileStatus.MAIN))
-                .forEach(p -> p.updateProfileStatus(ProfileStatus.NORMAL));
+        List<Profile> profiles = profileRepository.findAllByMember(member);
+
+        if (profiles.size() == 1) {
+            return ProfileResponse.generateProfile(
+                profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
+                    ProfileStatus.MAIN));
         }
 
-        Profile updatedProfile =
-            profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
-                dto.getProfileStatus());
+        if (isMainProfile(dto.getProfileStatus())) {
+            log.info("기존 메인 프로필을 일반 프로필로 전환");
+            profiles.forEach(p -> p.updateProfileStatus(ProfileStatus.NORMAL));
+        } else if (isMainProfile(profile.getProfileStatus())) {
+            log.info("수정 되기 전의 메인 프로필이 수정 된 후에는 일반 프로필이 되므로 회원의 다른 프로필을 메인 프로필로 임의 지정");
+            profiles
+                .stream().filter(p -> p.getProfileStatus().equals(ProfileStatus.NORMAL))
+                .findFirst()
+                .ifPresent(p -> p.updateProfileStatus(ProfileStatus.MAIN));
+        }
 
-        log.info("프로필 수정 완료");
-        return ProfileResponse.generateProfile(updatedProfile);
+        return ProfileResponse.generateProfile(
+            profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
+                dto.getProfileStatus()));
     }
 
     @Transactional
@@ -87,8 +96,7 @@ public class ProfileService {
             profileRepository.findProfileByMemberAndProfileStatus(member, ProfileStatus.MAIN)
                 .orElseGet(() -> profileRepository.findAllByMember(member)
                     .stream().findFirst()
-                    .orElseThrow(() -> new EmptyProfileException(member.getLoginId())
-                    ));
+                    .orElseThrow(() -> new EmptyProfileException(member.getLoginId())));
 
         log.info("{} 의 메인 프로필 조회 완료", member.getLoginId());
 
@@ -112,7 +120,7 @@ public class ProfileService {
 
     private boolean isMainProfile(final ProfileStatus profileStatus) {
         log.info("수정할 프로필을 메인 프로필로 상태 변경할 것인지 확인");
-        return profileStatus.equals(ProfileStatus.MAIN);
+        return Objects.equals(profileStatus, ProfileStatus.MAIN);
     }
 
     private void checkMatchMemberNo(final Member member, final Profile profile) {
@@ -131,17 +139,8 @@ public class ProfileService {
     }
 
     private ProfileStatus setProfileStatus(final List<Profile> profiles) {
-
         log.info("프로필 상태 지정");
-        if (hasMainProfile(profiles)) {
-            return ProfileStatus.NORMAL;
-        }
-
-        return ProfileStatus.MAIN;
-    }
-
-    private boolean hasMainProfile(final List<Profile> profiles) {
-        return profiles.stream().anyMatch(profile -> profile.getProfileStatus().equals(
-            ProfileStatus.MAIN));
+        return profiles.stream().anyMatch(profile -> profile.getProfileStatus().equals(ProfileStatus.MAIN))
+            ? ProfileStatus.NORMAL : ProfileStatus.MAIN;
     }
 }
