@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import kr.co.mz.mzdinterviewassignment.domain.member.Member;
@@ -16,6 +17,7 @@ import kr.co.mz.mzdinterviewassignment.domain.profile.ProfileStatus;
 import kr.co.mz.mzdinterviewassignment.dto.request.profile.CreateProfileRequest;
 import kr.co.mz.mzdinterviewassignment.dto.request.profile.UpdateProfileRequest;
 import kr.co.mz.mzdinterviewassignment.dto.response.profile.ProfileResponse;
+import kr.co.mz.mzdinterviewassignment.exception.profile.CannotDeleteProfileException;
 import kr.co.mz.mzdinterviewassignment.exception.profile.EmptyProfileException;
 import kr.co.mz.mzdinterviewassignment.exception.profile.NotFoundProfileException;
 import kr.co.mz.mzdinterviewassignment.repository.ProfileRepository;
@@ -145,7 +147,7 @@ class ProfileServiceTest {
     }
 
     @Test
-    @DisplayName("메인 프로필 수정 성공 테스트")
+    @DisplayName("일반 프로필을 메인 프로필로 상태 수정 성공 테스트")
     void updateProfile_ChangeMainProfile_Success_Test() {
         List<Profile> profiles = generateProfiles();
 
@@ -174,6 +176,61 @@ class ProfileServiceTest {
     }
 
     @Test
+    @DisplayName("프로필이 하나 밖에 없을 때 일반 프로필로 상태만 변경 불가 수정 테스트")
+    void updateProfile_HasSingleProfileDoNotChangeProfileStatus_Test() {
+
+        Profile profile = generateProfile();
+
+        UpdateProfileRequest dto = new UpdateProfileRequest("신사임당", "0114321234",
+            null, ProfileStatus.NORMAL);
+
+        Mockito.when(profileRepository.findById(any(Long.class)))
+            .thenReturn(Optional.of(profile));
+
+        Mockito.when(profileRepository.findAllByMember(any(Member.class)))
+            .thenReturn(Collections.singletonList(profile));
+
+        profileService.updateProfile(dto, 1L, member);
+
+        assertThat(profile.getNickname()).isEqualTo(dto.getNickname());
+        assertThat(profile.getPhoneNumber()).isEqualTo(dto.getPhoneNumber());
+        assertThat(profile.getAddress()).isEqualTo(dto.getAddress());
+        assertThat(profile.getProfileStatus()).isNotEqualTo(dto.getProfileStatus());
+
+        Mockito.verify(profileRepository, Mockito.times(1)).findById(any(Long.class));
+        Mockito.verify(profileRepository, Mockito.times(1)).findAllByMember(any(Member.class));
+    }
+
+    @Test
+    @DisplayName("메인 프로필을 일반 프로필로 전환한다면 회원의 다른 프로필 하나를 메인프로필로 전환 테스트")
+    void updateProfile_IfChangeMainProfileToNormalProfile_Test() {
+        List<Profile> profiles = generateProfiles();
+
+        UpdateProfileRequest dto = new UpdateProfileRequest("신사임당", "0114321234",
+            null, ProfileStatus.NORMAL);
+
+        Mockito.when(profileRepository.findById(any(Long.class)))
+            .thenReturn(Optional.of(profiles.get(0)));
+
+        Mockito.when(profileRepository.findAllByMember(any(Member.class)))
+            .thenReturn(profiles);
+
+        profileService.updateProfile(dto, 1L, member);
+
+        assertThat(profiles.get(0).getProfileStatus()).isEqualTo(dto.getProfileStatus());
+        assertThat(profiles.get(0).getNickname()).isEqualTo(dto.getNickname());
+        assertThat(profiles.get(0).getPhoneNumber()).isEqualTo(dto.getPhoneNumber());
+        assertThat(profiles.get(0).getAddress()).isEqualTo(dto.getAddress());
+
+        assertThat(profiles.stream()
+            .anyMatch(profile -> Objects.equals(profile.getProfileStatus(), ProfileStatus.MAIN)))
+            .isTrue();
+
+        Mockito.verify(profileRepository, Mockito.times(1)).findById(any(Long.class));
+        Mockito.verify(profileRepository, Mockito.times(1)).findAllByMember(any(Member.class));
+    }
+
+    @Test
     @DisplayName("프로필 식별 번호로 프로필을 찾을 수 없을 시 프로필 삭제 실패 테스트 ")
     void deleteProfile_NotFoundProfile_Fail_Test() {
 
@@ -182,6 +239,24 @@ class ProfileServiceTest {
 
         assertThatThrownBy(() -> profileService.deleteProfile(1L, member))
             .isInstanceOf(NotFoundProfileException.class);
+
+        Mockito.verify(profileRepository, Mockito.times(1)).findById(any(Long.class));
+        Mockito.verify(profileRepository, Mockito.never()).delete(any(Profile.class));
+    }
+
+    @Test
+    @DisplayName("회원의 프로필이 1개만 있을 때 프로필 삭제 시 실패 테스트")
+    void deleteProfile_SingleProfile_Fail_Test() {
+        Profile profile = generateProfile();
+
+        Mockito.when(profileRepository.findById(any(Long.class)))
+            .thenReturn(Optional.of(profile));
+
+        Mockito.when(profileRepository.findAllByMember(any(Member.class)))
+            .thenReturn(Collections.singletonList(profile));
+
+        assertThatThrownBy(() -> profileService.deleteProfile(1L, member))
+            .isInstanceOf(CannotDeleteProfileException.class);
 
         Mockito.verify(profileRepository, Mockito.times(1)).findById(any(Long.class));
         Mockito.verify(profileRepository, Mockito.never()).delete(any(Profile.class));
