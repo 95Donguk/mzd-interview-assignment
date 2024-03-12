@@ -8,6 +8,7 @@ import kr.co.mz.mzdinterviewassignment.domain.profile.ProfileStatus;
 import kr.co.mz.mzdinterviewassignment.dto.request.profile.CreateProfileRequest;
 import kr.co.mz.mzdinterviewassignment.dto.request.profile.UpdateProfileRequest;
 import kr.co.mz.mzdinterviewassignment.dto.response.profile.ProfileResponse;
+import kr.co.mz.mzdinterviewassignment.exception.profile.CannotDeleteProfileException;
 import kr.co.mz.mzdinterviewassignment.exception.profile.EmptyProfileException;
 import kr.co.mz.mzdinterviewassignment.exception.profile.NonMatchMemberNoException;
 import kr.co.mz.mzdinterviewassignment.exception.profile.NotFoundProfileException;
@@ -62,7 +63,7 @@ public class ProfileService {
             log.info("기존 메인 프로필을 일반 프로필로 전환");
             profiles.forEach(p -> p.updateProfileStatus(ProfileStatus.NORMAL));
         } else if (isMainProfile(profile.getProfileStatus())) {
-            log.info("수정 되기 전의 메인 프로필이 수정 된 후에는 일반 프로필이 되므로 회원의 다른 프로필을 메인 프로필로 임의 지정");
+            log.info("메인 프로필을 일반 프로필로 전환으로 인해 회원의 다른 프로필을 메인 프로필로 임의 지정");
             profiles
                 .stream().filter(p -> p.getProfileStatus().equals(ProfileStatus.NORMAL))
                 .findFirst()
@@ -82,6 +83,12 @@ public class ProfileService {
             .orElseThrow(() -> new NotFoundProfileException(profileNo));
 
         checkMatchMemberNo(member, profile);
+
+        List<Profile> profiles = profileRepository.findAllByMember(member);
+
+        if (profiles.size() == 1) {
+            throw new CannotDeleteProfileException(member.getLoginId());
+        }
 
         profileRepository.delete(profile);
         log.info("프로필 삭제 완료");
