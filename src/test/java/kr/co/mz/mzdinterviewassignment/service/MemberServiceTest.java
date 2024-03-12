@@ -141,7 +141,8 @@ class MemberServiceTest {
         Page<Member> result = memberService.findMembersContainName("testName", 0, 10);
 
         assertThat(result.getContent()).hasSize(10);
-        Mockito.verify(memberRepository, Mockito.times(1)).findMembersByNameContaining("testName", pageRequest);
+        Mockito.verify(memberRepository, Mockito.times(1))
+            .findMembersByNameContaining("testName", pageRequest);
     }
 
     private static PageImpl<Member> generatePageMembers() {
