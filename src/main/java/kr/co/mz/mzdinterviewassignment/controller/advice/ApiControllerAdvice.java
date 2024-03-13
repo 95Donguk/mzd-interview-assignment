@@ -71,7 +71,7 @@ public class ApiControllerAdvice {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e) {
-        
+
         log.debug("Exception message : {}", e.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

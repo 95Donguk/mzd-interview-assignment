@@ -106,7 +106,7 @@ class MemberApiControllerTest {
                 delete("/api/members/" + memberNo))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("회원 삭제 성공"))
-            .andExpect(jsonPath("$.data").value("삭제된 회원 아이디 test1"))
+            .andExpect(jsonPath("$.data").value("삭제된 회원 아이디 : test1"))
             .andDo(print());
 
         verify(memberProfileFacade, times(1)).deleteMember(1L);
