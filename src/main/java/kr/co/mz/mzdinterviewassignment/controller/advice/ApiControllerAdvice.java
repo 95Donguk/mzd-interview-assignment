@@ -1,7 +1,7 @@
 package kr.co.mz.mzdinterviewassignment.controller.advice;
 
 import jakarta.validation.ConstraintViolationException;
-import kr.co.mz.mzdinterviewassignment.dto.response.error.ErrorResult;
+import kr.co.mz.mzdinterviewassignment.dto.response.error.ErrorResponse;
 import kr.co.mz.mzdinterviewassignment.exception.member.DuplicateLoginIdException;
 import kr.co.mz.mzdinterviewassignment.exception.member.NotFoundMemberException;
 import kr.co.mz.mzdinterviewassignment.exception.profile.EmptyProfileException;
@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiControllerAdvice {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResult> handleException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error("Exception catch : ", e);
         log.error("Exception catch : {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ErrorResult.builder()
+            .body(ErrorResponse.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error(HttpStatus.INTERNAL_SERVER_ERROR.name())
                 .message("요청에 실패했습니다.")
@@ -34,11 +34,11 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResult> handleConstraintViolationException(
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(
         ConstraintViolationException e) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResult.builder()
+            .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.name())
                 .message(e.getConstraintViolations().stream()
@@ -50,10 +50,10 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResult> handleValidationException(
+    public ResponseEntity<ErrorResponse> handleValidationException(
         MethodArgumentNotValidException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResult.builder()
+            .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.name())
                 .message(e.getFieldErrors().stream()
@@ -63,10 +63,10 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResult> handleHttpMessageNotReadableException(
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResult.builder()
+            .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.name())
                 .message("JSON parse error")
@@ -74,10 +74,10 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(DuplicateLoginIdException.class)
-    public ResponseEntity<ErrorResult> handleDuplicateLoginIdException(
+    public ResponseEntity<ErrorResponse> handleDuplicateLoginIdException(
         DuplicateLoginIdException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResult.builder()
+            .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.name())
                 .message(e.getMessage())
@@ -85,9 +85,9 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(NotFoundMemberException.class)
-    public ResponseEntity<ErrorResult> handleNotFoundMemberException(NotFoundMemberException e) {
+    public ResponseEntity<ErrorResponse> handleNotFoundMemberException(NotFoundMemberException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(ErrorResult.builder()
+            .body(ErrorResponse.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .error(HttpStatus.NOT_FOUND.name())
                 .message(e.getMessage())
@@ -95,9 +95,9 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(EmptyProfileException.class)
-    public ResponseEntity<ErrorResult> handleEmptyProfileException(EmptyProfileException e) {
+    public ResponseEntity<ErrorResponse> handleEmptyProfileException(EmptyProfileException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResult.builder()
+            .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.name())
                 .message(e.getMessage())
@@ -105,10 +105,10 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(NonMatchMemberNoException.class)
-    public ResponseEntity<ErrorResult> handleNonMatchMemberNoException(
+    public ResponseEntity<ErrorResponse> handleNonMatchMemberNoException(
         NonMatchMemberNoException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResult.builder()
+            .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.name())
                 .message(e.getMessage())
@@ -116,9 +116,9 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(NotFoundProfileException.class)
-    public ResponseEntity<ErrorResult> handleNotFoundProfileException(NotFoundProfileException e) {
+    public ResponseEntity<ErrorResponse> handleNotFoundProfileException(NotFoundProfileException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(ErrorResult.builder()
+            .body(ErrorResponse.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .error(HttpStatus.NOT_FOUND.name())
                 .message(e.getMessage())
@@ -126,9 +126,9 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(InvalidStatusException.class)
-    public ResponseEntity<ErrorResult> handleInvalidStatusException(InvalidStatusException e) {
+    public ResponseEntity<ErrorResponse> handleInvalidStatusException(InvalidStatusException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResult.builder()
+            .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.name())
                 .message(e.getMessage())
