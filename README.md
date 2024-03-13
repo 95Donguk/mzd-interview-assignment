@@ -15,7 +15,7 @@
 ---
 
 ### ERD
-![ERD](https://github.com/95Donguk/mzd-interview-assignment/assets/90694560/c31b0aac-3978-4611-83e8-01ba54df95fd)
+![ERD](https://github.com/95Donguk/mzd-interview-assignment/assets/90694560/a6a8a650-662e-4041-8c1d-0a3f691706a2)
 
 ---
 
