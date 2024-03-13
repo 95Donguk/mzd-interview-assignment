@@ -24,7 +24,7 @@ public class ApiControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error("Exception catch : ", e);
-        log.error("Exception catch : {}", e.getMessage());
+        log.error("Exception message : {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -36,6 +36,9 @@ public class ApiControllerAdvice {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(
         ConstraintViolationException e) {
+
+        log.debug("Exception catch : ", e);
+        log.debug("Exception message : {}", e.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder()
@@ -52,6 +55,10 @@ public class ApiControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
         MethodArgumentNotValidException e) {
+
+        log.debug("Exception catch : ", e);
+        log.debug("Exception message : {}", e.getMessage());
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
@@ -65,6 +72,10 @@ public class ApiControllerAdvice {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e) {
+
+        log.debug("Exception catch : ", e);
+        log.debug("Exception message : {}", e.getMessage());
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
