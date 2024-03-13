@@ -1,5 +1,6 @@
 package kr.co.mz.mzdinterviewassignment.dto.request.member;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import kr.co.mz.mzdinterviewassignment.domain.member.Member;
@@ -28,6 +29,7 @@ public class CreateMemberRequest {
     @NotNull(message = "비밀번호는 필수입니다")
     private String password;
 
+    @Valid
     @NotNull(message = "프로필은 필수입니다.")
     private CreateProfileRequest profile;
 
