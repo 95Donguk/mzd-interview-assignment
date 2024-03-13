@@ -20,6 +20,7 @@ import java.util.List;
 import kr.co.mz.mzdinterviewassignment.domain.member.MemberStatus;
 import kr.co.mz.mzdinterviewassignment.domain.profile.ProfileStatus;
 import kr.co.mz.mzdinterviewassignment.dto.request.member.CreateMemberRequest;
+import kr.co.mz.mzdinterviewassignment.dto.request.profile.CreateProfileRequest;
 import kr.co.mz.mzdinterviewassignment.dto.response.member.MemberDetailsResponse;
 import kr.co.mz.mzdinterviewassignment.dto.response.member.MemberInfoResponse;
 import kr.co.mz.mzdinterviewassignment.dto.response.member.MemberResponse;
@@ -52,10 +53,15 @@ class MemberApiControllerTest {
         long memberNo = 1L;
         String loginId = "test1";
         String name = "테스트";
+
+        CreateProfileRequest profileDto = new CreateProfileRequest("홍길동", "01098765432",
+            "서울특별시 종로구 청계천로 85 17층(관철동, 삼일빌딩) 한국지역정보개발원");
+
         CreateMemberRequest request = new CreateMemberRequest(
             loginId,
             name,
-            "test123@"
+            "test123@",
+            profileDto
         );
 
         MemberResponse response = MemberResponse.builder()
@@ -104,7 +110,6 @@ class MemberApiControllerTest {
             .andDo(print());
 
         verify(memberProfileFacade, times(1)).deleteMember(1L);
-        ;
     }
 
     @Test

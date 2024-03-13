@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 import kr.co.mz.mzdinterviewassignment.domain.member.Member;
 import kr.co.mz.mzdinterviewassignment.domain.member.MemberStatus;
 import kr.co.mz.mzdinterviewassignment.dto.request.member.CreateMemberRequest;
+import kr.co.mz.mzdinterviewassignment.dto.request.profile.CreateProfileRequest;
 import kr.co.mz.mzdinterviewassignment.dto.response.member.MemberResponse;
 import kr.co.mz.mzdinterviewassignment.exception.member.DuplicateLoginIdException;
 import kr.co.mz.mzdinterviewassignment.exception.member.NotFoundMemberException;
@@ -39,7 +40,11 @@ class MemberServiceTest {
 
         Member member = generateMember();
 
-        CreateMemberRequest dto = new CreateMemberRequest("testId", "testName", "testPassword");
+        CreateProfileRequest profileDto = new CreateProfileRequest("홍길동", "01098765432",
+            "서울특별시 종로구 청계천로 85 17층(관철동, 삼일빌딩) 한국지역정보개발원");
+
+        CreateMemberRequest dto =
+            new CreateMemberRequest("testid", "테스트", "testPassword", profileDto);
 
         Mockito.when(memberRepository.findByLoginId(dto.getLoginId()))
             .thenReturn(Optional.of(member));
@@ -54,15 +59,19 @@ class MemberServiceTest {
     @DisplayName("회원 생성 성공 테스트")
     void createMember_Success_Test() {
 
-        CreateMemberRequest dto = new CreateMemberRequest("testId", "testName", "testPassword");
+        CreateProfileRequest profileDto = new CreateProfileRequest("홍길동", "01098765432",
+            "서울특별시 종로구 청계천로 85 17층(관철동, 삼일빌딩) 한국지역정보개발원");
+
+        CreateMemberRequest dto =
+            new CreateMemberRequest("testid", "테스트", "testPassword", profileDto);
 
         Mockito.when(memberRepository.save(any(Member.class)))
             .then(returnsFirstArg());
 
-        MemberResponse member = memberService.createMember(dto);
+        Member member = memberService.createMember(dto);
 
-        assertThat(member.getLoginId()).isEqualTo("testId");
-        assertThat(member.getName()).isEqualTo("testName");
+        assertThat(member.getLoginId()).isEqualTo(dto.getLoginId());
+        assertThat(member.getName()).isEqualTo(dto.getName());
 
         Mockito.verify(memberRepository, Mockito.times(1)).save(any(Member.class));
     }
