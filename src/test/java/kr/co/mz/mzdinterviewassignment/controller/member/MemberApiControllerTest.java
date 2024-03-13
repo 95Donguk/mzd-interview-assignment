@@ -1,22 +1,28 @@
 package kr.co.mz.mzdinterviewassignment.controller.member;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import kr.co.mz.mzdinterviewassignment.domain.member.MemberStatus;
 import kr.co.mz.mzdinterviewassignment.domain.profile.ProfileStatus;
+import kr.co.mz.mzdinterviewassignment.dto.request.member.CreateMemberRequest;
 import kr.co.mz.mzdinterviewassignment.dto.response.member.MemberDetailsResponse;
 import kr.co.mz.mzdinterviewassignment.dto.response.member.MemberInfoResponse;
+import kr.co.mz.mzdinterviewassignment.dto.response.member.MemberResponse;
 import kr.co.mz.mzdinterviewassignment.dto.response.profile.ProfileResponse;
 import kr.co.mz.mzdinterviewassignment.facade.MemberProfileFacade;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +32,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(MemberApiController.class)
@@ -37,6 +44,48 @@ class MemberApiControllerTest {
 
     @MockBean
     MemberProfileFacade memberProfileFacade;
+
+    @Test
+    @DisplayName("회원 생성 요청 테스트")
+    void createMember_Test() throws Exception {
+
+        long memberNo = 1L;
+        String loginId = "test1";
+        String name = "테스트";
+        CreateMemberRequest request = new CreateMemberRequest(
+            loginId,
+            name,
+            "test123@"
+        );
+
+        MemberResponse response = MemberResponse.builder()
+            .memberNo(memberNo)
+            .loginId(loginId)
+            .name(name)
+            .createdAt(LocalDateTime.now())
+            .build();
+
+        given(memberProfileFacade.createMember(any(CreateMemberRequest.class)))
+            .willReturn(response);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        mockMvc.perform(
+                post("/api/members")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(header().exists("location"))
+            .andExpect(jsonPath("$.code").value(HttpStatus.CREATED.name()))
+            .andExpect(jsonPath("$.message").value("회원 생성 성공"))
+            .andExpect(jsonPath("$.data.memberNo").value(memberNo))
+            .andExpect(jsonPath("$.data.loginId").value(loginId))
+            .andExpect(jsonPath("$.data.name").value(name))
+            .andExpect(jsonPath("$.data.createdAt").exists())
+            .andDo(print());
+
+        verify(memberProfileFacade).createMember(any(CreateMemberRequest.class));
+    }
 
     @Test
     @DisplayName("회원 삭제 요청 테스트")
