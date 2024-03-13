@@ -63,7 +63,6 @@ public class ProfileApiController {
             "회원 프로필 수정 성공",
             data);
 
-
         return ResponseEntity.ok(response);
     }
 
