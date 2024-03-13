@@ -28,7 +28,9 @@ public class MemberProfileFacade {
 
     @Transactional
     public MemberResponse createMember(final CreateMemberRequest dto) {
-        return memberService.createMember(dto);
+        Member member = memberService.createMember(dto);
+        ProfileResponse response = profileService.createProfile(dto.getProfile(), member);
+        return MemberResponse.generateMemberResponse(member, response);
     }
 
     @Transactional

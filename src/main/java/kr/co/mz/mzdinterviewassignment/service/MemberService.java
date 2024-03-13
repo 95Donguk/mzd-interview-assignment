@@ -2,7 +2,6 @@ package kr.co.mz.mzdinterviewassignment.service;
 
 import kr.co.mz.mzdinterviewassignment.domain.member.Member;
 import kr.co.mz.mzdinterviewassignment.dto.request.member.CreateMemberRequest;
-import kr.co.mz.mzdinterviewassignment.dto.response.member.MemberResponse;
 import kr.co.mz.mzdinterviewassignment.exception.member.DuplicateLoginIdException;
 import kr.co.mz.mzdinterviewassignment.exception.member.NotFoundMemberException;
 import kr.co.mz.mzdinterviewassignment.repository.MemberRepository;
@@ -23,7 +22,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public MemberResponse createMember(final CreateMemberRequest dto) {
+    public Member createMember(final CreateMemberRequest dto) {
         log.info("회원 생성 시작");
 
         if (hasDuplicateLoginId(dto.getLoginId())) {
@@ -32,7 +31,7 @@ public class MemberService {
 
         Member member = memberRepository.save(dto.toEntity());
         log.info("회원 생성 성공");
-        return MemberResponse.generateMemberResponse(member);
+        return member;
     }
 
     private boolean hasDuplicateLoginId(final String loginId) {

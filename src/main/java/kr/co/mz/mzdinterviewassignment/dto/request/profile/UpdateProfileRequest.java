@@ -29,13 +29,4 @@ public class UpdateProfileRequest {
 
     @NotNull(message = "프로필 상태는 필수입니다")
     private ProfileStatus profileStatus;
-
-    public Profile toEntity() {
-        return Profile.builder()
-            .nickname(nickname)
-            .phoneNumber(phoneNumber)
-            .address(address)
-            .profileStatus(profileStatus)
-            .build();
-    }
 }

@@ -3,6 +3,7 @@ package kr.co.mz.mzdinterviewassignment.dto.request.member;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import kr.co.mz.mzdinterviewassignment.domain.member.Member;
+import kr.co.mz.mzdinterviewassignment.dto.request.profile.CreateProfileRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,9 @@ public class CreateMemberRequest {
         message = "비밀번호는 영문 대소문자, 숫자, 특수문자'~!@#$%^&*()+|='로 구성된 8 ~ 16자리로 입력해주세요.")
     @NotNull(message = "비밀번호는 필수입니다")
     private String password;
+
+    @NotNull(message = "프로필은 필수입니다.")
+    private CreateProfileRequest profile;
 
     public Member toEntity() {
         return Member.builder()

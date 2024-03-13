@@ -147,7 +147,8 @@ public class ProfileService {
 
     private ProfileStatus setProfileStatus(final List<Profile> profiles) {
         log.info("프로필 상태 지정");
-        return profiles.stream().anyMatch(profile -> profile.getProfileStatus().equals(ProfileStatus.MAIN))
+        return profiles.stream()
+            .anyMatch(profile -> profile.getProfileStatus().equals(ProfileStatus.MAIN))
             ? ProfileStatus.NORMAL : ProfileStatus.MAIN;
     }
 }

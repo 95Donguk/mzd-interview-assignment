@@ -1,7 +1,6 @@
 package kr.co.mz.mzdinterviewassignment.controller.advice;
 
 import jakarta.validation.ConstraintViolationException;
-import java.util.Optional;
 import kr.co.mz.mzdinterviewassignment.dto.response.error.ErrorResult;
 import kr.co.mz.mzdinterviewassignment.exception.member.DuplicateLoginIdException;
 import kr.co.mz.mzdinterviewassignment.exception.member.NotFoundMemberException;
