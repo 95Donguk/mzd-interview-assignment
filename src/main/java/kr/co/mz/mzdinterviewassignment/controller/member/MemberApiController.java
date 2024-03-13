@@ -58,7 +58,7 @@ public class MemberApiController {
 
         ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK.name(),
             "회원 삭제 성공",
-            "삭제된 회원 아이디 " + loginId);
+            "삭제된 회원 아이디 : " + loginId);
 
         return ResponseEntity.ok(response);
     }

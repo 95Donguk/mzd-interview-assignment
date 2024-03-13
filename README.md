@@ -12,6 +12,13 @@
         - 테이블명에 `MEMBER_TBL`, `PROFILE_TBL`를 각각 넣어서 명령어를 입력해주세요.
 - JPA
 
+---
+
+### ERD
+![ERD](https://github.com/95Donguk/mzd-interview-assignment/assets/90694560/c31b0aac-3978-4611-83e8-01ba54df95fd)
+
+---
+
 ### API
 
 |    구분     |    내용     | Method |                                 URI                                 |
@@ -24,15 +31,13 @@
 |  회원 프로필   |   회원 프로필 수정 API    | PATCH  |           /api/members/{member_no}/profiles/{profile_no}            |
 |  회원 프로필   |    회원 프로필 삭제 API    | DELETE |           /api/members/{member_no}/profiles/{profile_no}            |
 
-### ERD
-![ERD](https://github.com/95Donguk/mzd-interview-assignment/assets/90694560/c31b0aac-3978-4611-83e8-01ba54df95fd)
-
+---
 ### API DOCS
 #### - 회원 생성 API -
 
-    > POST /api/members 
+> POST /api/members 
 
-- Request Body Parameter
+#### Request Body Parameter
 ```
   {
     "loginId": "honggildong00",
@@ -55,12 +60,17 @@
   - 비밀번호는 영문 대소문자, 숫자, 특수문자'~!@#$%^&*()+\|='로 구성된 8 ~ 16자리로 입력해주세요.  
 - profile(필수)
   - 회원 가입 시 생성할 프로필 입니다.
-    - name(필수)
-      - 닉네임은 영문 대소문자, 숫자, 한글로 구성된 2 ~ 8자리로 입력해주세요.
-    - phoneNumber(필수)
-      - 휴대전화 번호는 하이픈(-)을 제외한 10자리 또는 11자리로 입력해주세요.
-      - 
-- Response
+      - nickname(필수)
+        - 프로필의 별명입니다.
+        - 닉네임은 영문 대소문자, 숫자, 한글로 구성된 2 ~ 8자리로 입력해주세요.
+      - phoneNumber(필수)
+          - 프로필의 휴대폰 번호입니다.
+          - 휴대전화 번호는 하이픈(-)을 제외한 10자리 또는 11자리로 입력해주세요.
+      - address
+          - 프로필의 주소입니다.
+
+---
+#### Response
 ```
 {
     "code": "CREATED",
@@ -82,23 +92,337 @@
     }
 }
 ```
-- code
-  - http 상태 코드 입니다.
-- message
-  - 요청 결과 메시지 입니다.
-- data
+- code : http 상태 코드 입니다.
+
+
+- message : 요청 결과 메시지 입니다.
+
+
+- data : 생성된 회원 정보 입니다.
   - memberNo : 생성된 회원 식별 번호
   - loginId : 생성된 회원 로그인 아이디
   - name : 생성된 회원 이름
   - createdAt : 회원 생성 시간
-  - profile
+  - profile : 생성된 프로필 정보
     - profileNo : 생성된 프로필 식별 번호
     - nickname : 생성된 프로필 별명
     - phoneNumber : 생성된 프로필 휴대전화번호
     - address : 생성된 프로필 주소
-    - profileStatus : 생성된 프로필이 메인 프로필인지 일반 프로필인지 구분 가능한 프로필 상태
+    - profileStatus : 프로필 상태(MAIN: 메인프로필, NORMAL: 일반 프로필)
     - createdAt : 프로필 생성 시간
-    - updatedAt : 프로필 수정 시간.
+    - updatedAt : 프로필 수정 시간
+
+---
+
+#### - 회원 삭제 API -
+
+> DELETE /api/members/{member_no}
+
+#### Response
+```
+{
+    "code": "OK",
+    "message": "회원 삭제 성공",
+    "data": "삭제된 회원 아이디 : honggildong00"
+}
+```
+- code : http 상태 코드 입니다.
+
+
+- message : 요청 결과 메시지 입니다.
+
+
+- data : 삭제 요청한 회원 아이디를 출력합니다.
+
+---
+
+#### - 회원 전체 조회 API -
+
+> GET /api/members?page={page_no}&size={members_count}&name={member_name}
+
+#### Response
+```
+{
+    "code": "OK",
+    "message": "회원 전체 조회 성공",
+    "data": [
+        {
+            "memberNo": 1,
+            "loginId": "honggildong00",
+            "name": "홍길동",
+            "password": "1q2w3e4r5t",
+            "memberStatus": "ACTIVE",
+            "createdAt": "2024-03-13T17:43:27.8074669",
+            "updatedAt": "2024-03-13T17:43:27.8074669",
+            "mainProfile": {
+                "profileNo": 1,
+                "nickname": "히어로",
+                "phoneNumber": "01012345678",
+                "address": "서울특별시 성북구 화랑도 11길 26 103동 1602호 (하월곡동, 한국아파트)"
+                "profileStatus": "MAIN",
+                "createdAt": "2024-03-13T17:43:27.8466229",
+                "updatedAt": "2024-03-13T17:43:27.8466229"
+            }
+        },
+        {
+            "memberNo": 5,
+            "loginId": "lovelee2",
+            "name": "이몽룡",
+            "password": "1q2w3e4r5t",
+            "memberStatus": "ACTIVE",
+            "updatedAt": "2024-03-13T18:31:11.637024",
+            "createdAt": "2024-03-13T18:31:11.637024",
+            "mainProfile": {
+                "profileNo": 9,
+                "nickname": "사랑꾼",
+                "phoneNumber": "01056781234",
+                "address": "사랑시 고백구 행복동 7-12",
+                "profileStatus": "MAIN",
+                "createdAt": "2024-03-13T19:56:27.303917",
+                "updatedAt": "2024-03-13T19:59:54.323729"
+            }
+        }
+    ]
+}
+```
+- code : http 상태 코드 입니다.
+
+
+- message : 요청 결과 메시지 입니다.
+
+
+- data : 전체 회원 정보
+    - memberNo : 회원 식별 번호
+    - loginId : 회원 로그인 아이디
+    - name : 회원 이름
+    - password : 회원 비밀번호
+    - memberStatus : 회원 상태(ACTIVE: 활성, DELETED: 삭제)
+    - createdAt : 회원 생성 시간
+    - updatedAt : 회원 수정 시간
+    - mainProfile : 메인 프로필 정보
+        - profileNo : 프로필 식별 번호
+        - nickname : 프로필 별명
+        - phoneNumber : 프로필 휴대전화번호
+        - address : 프로필 주소
+        - profileStatus : 프로필 상태(MAIN: 메인프로필, NORMAL: 일반 프로필)
+        - createdAt : 프로필 생성 시간
+        - updatedAt : 프로필 수정 시간
+
+---
+#### - 회원 상세 조회 API -
+
+> GET /api/members/{member_no}
+
+#### Response
+```
+{
+    "code": "OK",
+    "message": "회원 상세 조회 성공",
+    "data": {
+        "memberNo": 1,
+        "loginId": "honggildong00",
+        "name": "홍길동",
+        "password": "1q2w3e4r5t",
+        "memberStatus": "ACTIVE",
+        "createdAt": "2024-03-13T17:43:27.8074669",
+        "updatedAt": "2024-03-13T17:43:27.8074669",
+        "profiles": [
+            {
+                "profileNo": 1,
+                "nickname": "히어로",
+                "phoneNumber": "01012345678",
+                "address": "서울특별시 성북구 화랑도 11길 26 103동 1602호 (하월곡동, 한국아파트)"
+                "profileStatus": "MAIN",
+                "createdAt": "2024-03-13T17:43:27.8466229",
+                "updatedAt": "2024-03-13T17:43:27.8466229"
+            },
+            {
+                "profileNo": 18,
+                "nickname": "쾌도홍길동",
+                "phoneNumber": "01011118888",
+                "address": 경상남도 창원시 의창구 사림동 1,
+                "profileStatus": "NORMAL",
+                "createdAt": "2024-03-13T20:11:26.824097",
+                "updatedAt": "2024-03-13T20:11:26.824097"
+            },
+            {
+                "profileNo": 25,
+                "nickname": "의적",
+                "phoneNumber": "01012345678",
+                "address": 부산광역시 연제구 중앙대로 1001,
+                "profileStatus": "NORMAL",
+                "createdAt": "2024-03-13T20:49:38.186319",
+                "updatedAt": "2024-03-13T20:49:38.186319"
+            },
+        ]
+    }
+}
+```
+- code : http 상태 코드 입니다.
+
+
+- message : 요청 결과 메시지 입니다.
+
+
+- data : 전체 회원 정보
+    - memberNo : 회원 식별 번호
+    - loginId : 회원 로그인 아이디
+    - name : 회원 이름
+    - password : 회원 비밀번호
+    - memberStatus : 회원 상태(ACTIVE: 활성, DELETED: 삭제)
+    - createdAt : 회원 생성 시간
+    - updatedAt : 회원 수정 시간
+    - profiles : 회원 전체 프로필 정보
+        - profileNo : 프로필 식별 번호
+        - nickname : 프로필 별명
+        - phoneNumber : 프로필 휴대전화번호
+        - address : 프로필 주소
+        - profileStatus : 프로필 상태(MAIN: 메인프로필, NORMAL: 일반 프로필)
+        - createdAt : 프로필 생성 시간
+        - updatedAt : 프로필 수정 시간
+---
+#### - 회원 프로필 생성 API -
+
+> POST /api/members/{member_no}/profiles
+
+#### Request Body Parameter
+```
+  {
+      "nickname": "히어로",
+      "phoneNumber": "01012345678",
+      "address": "서울특별시 성북구 화랑도 11길 26 103동 1602호 (하월곡동, 한국아파트)"
+  }
+```
+- nickname(필수)
+  - 프로필의 별명입니다.
+  - 닉네임은 영문 대소문자, 숫자, 한글로 구성된 2 ~ 8자리로 입력해주세요.
+
+
+- phoneNumber(필수)
+  - 프로필의 휴대폰 번호입니다. 
+  - 휴대전화 번호는 하이픈(-)을 제외한 10자리 또는 11자리로 입력해주세요.
+
+
+- address
+  - 프로필의 주소입니다.
+
+---
+#### Response
+```
+{
+    "code": "CREATED",
+    "message": "회원 프로필 생성 성공",
+    "data": {
+        "profileNo": 18,
+        "nickname": "쾌도홍길동",
+        "phoneNumber": "01011118888",
+        "address": 경상남도 창원시 의창구 사림동 1,
+        "profileStatus": "NORMAL",
+        "createdAt": "2024-03-13T20:11:26.824097",
+        "updatedAt": "2024-03-13T20:11:26.824097"
+    }
+}
+```
+- code : http 상태 코드 입니다.
+
+
+- message : 요청 결과 메시지 입니다.
+
+
+- data : 생성된 프로필 정보 입니다.
+  - profileNo : 생성된 프로필 식별 번호
+  - nickname : 생성된 프로필 별명
+  - phoneNumber : 생성된 프로필 휴대전화번호
+  - address : 생성된 프로필 주소
+  - profileStatus : 프로필 상태(MAIN: 메인프로필, NORMAL: 일반 프로필)
+  - createdAt : 프로필 생성 시간
+  - updatedAt : 프로필 수정 시간
+---
+#### - 회원 프로필 수정 API -
+
+> PATCH /api/members/{member_no}/profiles/{profile_no}
+
+#### Request Body Parameter
+```
+{
+  "nickname": "사랑꾼",
+  "phoneNumber": "01056781234",
+  "address": "사랑시 고백구 행복동 7-12",
+  "profileStatus": "MAIN"
+}
+```
+- nickname(필수)
+    - 프로필의 별명입니다.
+    - 닉네임은 영문 대소문자, 숫자, 한글로 구성된 2 ~ 8자리로 입력해주세요.
+
+
+- phoneNumber(필수)
+    - 프로필의 휴대폰 번호입니다.
+    - 휴대전화 번호는 하이픈(-)을 제외한 10자리 또는 11자리로 입력해주세요.
+
+
+- address
+    - 프로필의 주소입니다.
+
+
+- profileStatus(필수)
+    - 프로필의 상태입니다.
+    - 상태는 MAIN, NORMAL 만 취급합니다.
+      - MAIN: 메인프로필, NORMAL: 일반 프로필
+
+---
+#### Response
+```
+{
+    "code": "OK",
+    "message": "회원 프로필 수정 성공",
+    "data": {
+        "profileNo": 9,
+        "nickname": "사랑꾼",
+        "phoneNumber": "01056781234",
+        "address": "사랑시 고백구 행복동 7-12",
+        "profileStatus": "MAIN",
+        "createdAt": "2024-03-13T19:56:27.303917",
+        "updatedAt": "2024-03-13T19:59:54.323729"
+    }
+}
+```
+- code : http 상태 코드 입니다.
+
+
+- message : 요청 결과 메시지 입니다.
+
+
+- data : 수정된 프로필 정보 입니다.
+    - profileNo : 수정된 프로필 식별 번호
+    - nickname : 수정된 프로필 별명
+    - phoneNumber : 수정된 프로필 휴대전화번호
+    - address : 수정된 프로필 주소
+    - profileStatus : 프로필 상태(MAIN: 메인프로필, NORMAL: 일반 프로필)
+    - createdAt : 프로필 생성 시간
+    - updatedAt : 프로필 수정 시간
+---
+#### - 회원 삭제 API -
+
+> DELETE /api/members/{member_no}/profiles/{profile_no}
+
+#### Response
+```
+{
+    "code": "OK",
+    "message": "회원 프로필 삭제 성공",
+    "data": "삭제된 프로필 닉네임 : 의적"
+}
+```
+- code : http 상태 코드 입니다.
+
+
+- message : 요청 결과 메시지 입니다.
+
+
+- data : 삭제 요청한 프로필 닉네임을 출력합니다.
+
+---
 
 
 ### 요구 사항
