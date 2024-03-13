@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProfileService {
+    public static final int MIN_PROFILES_COUNT = 1;
+
     private final ProfileRepository profileRepository;
 
     @Transactional
@@ -53,7 +55,7 @@ public class ProfileService {
 
         List<Profile> profiles = profileRepository.findAllByMember(member);
 
-        if (profiles.size() == 1) {
+        if (profiles.size() == MIN_PROFILES_COUNT) {
             Profile updatedProfile =
                 profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
                     ProfileStatus.MAIN);
@@ -89,7 +91,7 @@ public class ProfileService {
 
         List<Profile> profiles = profileRepository.findAllByMember(member);
 
-        if (profiles.size() == 1) {
+        if (profiles.size() == MIN_PROFILES_COUNT) {
             throw new CannotDeleteProfileException(member.getLoginId());
         }
 
