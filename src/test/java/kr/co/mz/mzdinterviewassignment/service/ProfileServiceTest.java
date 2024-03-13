@@ -43,8 +43,8 @@ class ProfileServiceTest {
     @BeforeEach
     void setUp() {
         member = Member.builder()
-            .loginId("testId")
-            .name("testName")
+            .loginId("testid")
+            .name("테스트")
             .password("testPassword")
             .build();
     }
@@ -56,8 +56,8 @@ class ProfileServiceTest {
         List<Profile> profiles = IntStream.range(0, 5)
             .mapToObj(i -> Profile.builder()
                 .member(member)
-                .nickname("testNickname" + i)
-                .phoneNumber("01012345678" + i)
+                .nickname("테스트" + i)
+                .phoneNumber("0101234567" + i)
                 .address("서울특별시 성북구 화랑도 11길 " + i + " 103동 1602호 (하월곡동, 한국아파트)")
                 .profileStatus(ProfileStatus.NORMAL)
                 .build())
@@ -315,8 +315,8 @@ class ProfileServiceTest {
         List<Profile> profiles = IntStream.range(0, 5)
             .mapToObj(i -> Profile.builder()
                 .member(member)
-                .nickname("testNickname" + i)
-                .phoneNumber("01012345678" + i)
+                .nickname("테스트별명" + i)
+                .phoneNumber("0101234567" + i)
                 .address("서울특별시 성북구 화랑도 11길 " + i + " 103동 1602호 (하월곡동, 한국아파트)")
                 .profileStatus(ProfileStatus.NORMAL)
                 .build())
@@ -382,7 +382,7 @@ class ProfileServiceTest {
     private Profile generateProfile() {
         return Profile.builder()
             .member(member)
-            .nickname("testNickname")
+            .nickname("테스트별명")
             .phoneNumber("01012345678")
             .address("서울특별시 성북구 화랑도 11길 26 103동 1602호 (하월곡동, 한국아파트)")
             .profileStatus(ProfileStatus.MAIN)
@@ -393,8 +393,8 @@ class ProfileServiceTest {
         return IntStream.range(0, 5)
             .mapToObj(i -> Profile.builder()
                 .member(member)
-                .nickname("testNickname" + i)
-                .phoneNumber("01012345678" + i)
+                .nickname("테스트별명" + i)
+                .phoneNumber("0101234567" + i)
                 .address("서울특별시 성북구 화랑도 11길 " + i + " 103동 1602호 (하월곡동, 한국아파트)")
                 .profileStatus(i == 0 ? ProfileStatus.MAIN : ProfileStatus.NORMAL)
                 .build())

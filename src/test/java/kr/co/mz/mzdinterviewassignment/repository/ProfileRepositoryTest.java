@@ -27,8 +27,8 @@ class ProfileRepositoryTest {
     @BeforeEach
     void setUp() {
         member = Member.builder()
-            .loginId("testId")
-            .name("testName")
+            .loginId("testid")
+            .name("테스트")
             .password("testPassword")
             .build();
 
@@ -112,8 +112,8 @@ class ProfileRepositoryTest {
     @DisplayName("프로필이 없는 회원의 프로필 조회 테스트")
     void findAllByMember_HasNotProfile_Test() {
         Member otherMember = Member.builder()
-            .loginId("otherId")
-            .name("otherName")
+            .loginId("otherid")
+            .name("다른이름")
             .password("otherPassword")
             .build();
 
@@ -144,7 +144,7 @@ class ProfileRepositoryTest {
     private Profile generateProfile(final ProfileStatus status) {
         return Profile.builder()
             .member(member)
-            .nickname("testNickname")
+            .nickname("테스트별명")
             .phoneNumber("01012345678")
             .address("서울특별시 성북구 화랑도 11길 26 103동 1602호 (하월곡동, 한국아파트)")
             .profileStatus(status)
@@ -155,8 +155,8 @@ class ProfileRepositoryTest {
         return IntStream.range(0, 30)
             .mapToObj(i -> Profile.builder()
                 .member(member)
-                .nickname("testNickname" + i)
-                .phoneNumber("01012345678" + i)
+                .nickname("테스트별명" + i)
+                .phoneNumber("010123456" + i)
                 .address("서울특별시 성북구 화랑도 11길 " + i + " 103동 1602호 (하월곡동, 한국아파트)")
                 .profileStatus(i == 0 ? ProfileStatus.MAIN : ProfileStatus.NORMAL)
                 .build())

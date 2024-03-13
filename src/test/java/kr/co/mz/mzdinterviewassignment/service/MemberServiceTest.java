@@ -100,7 +100,7 @@ class MemberServiceTest {
 
         String loginId = memberService.deleteMember(1L);
 
-        assertThat(loginId).isEqualTo("testId");
+        assertThat(loginId).isEqualTo("testid");
         assertThat(member.getMemberStatus()).isEqualTo(MemberStatus.DELETED);
 
         Mockito.verify(memberRepository, Mockito.times(1)).findById(1L);
@@ -130,8 +130,8 @@ class MemberServiceTest {
 
         Member findMember = memberService.findMember(1L);
 
-        assertThat(findMember.getLoginId()).isEqualTo("testId");
-        assertThat(findMember.getName()).isEqualTo("testName");
+        assertThat(findMember.getLoginId()).isEqualTo("testid");
+        assertThat(findMember.getName()).isEqualTo("테스트");
         assertThat(findMember.getPassword()).isEqualTo("testPassword");
 
         Mockito.verify(memberRepository, Mockito.times(1)).findById(1L);
@@ -144,20 +144,20 @@ class MemberServiceTest {
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "memberNo"));
 
-        Mockito.when(memberRepository.findMembersByNameContaining("testName", pageRequest))
+        Mockito.when(memberRepository.findMembersByNameContaining("테스트", pageRequest))
             .thenReturn(members);
-        Page<Member> result = memberService.findMembersContainName("testName", 0, 10);
+        Page<Member> result = memberService.findMembersContainName("테스트", 0, 10);
 
         assertThat(result.getContent()).hasSize(10);
         Mockito.verify(memberRepository, Mockito.times(1))
-            .findMembersByNameContaining("testName", pageRequest);
+            .findMembersByNameContaining("테스트", pageRequest);
     }
 
     private static PageImpl<Member> generatePageMembers() {
         return new PageImpl<>(IntStream.range(1, 11)
             .mapToObj(i -> Member.builder()
-                .loginId("testId" + i)
-                .name("testName" + i)
+                .loginId("testid" + i)
+                .name("테스트")
                 .password("testPassword" + i)
                 .build())
             .toList());
@@ -165,8 +165,8 @@ class MemberServiceTest {
 
     private static Member generateMember() {
         return Member.builder()
-            .loginId("testId")
-            .name("testName")
+            .loginId("testid")
+            .name("테스트")
             .password("testPassword")
             .build();
     }

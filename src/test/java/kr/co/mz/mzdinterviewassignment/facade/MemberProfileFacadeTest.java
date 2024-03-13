@@ -91,19 +91,7 @@ class MemberProfileFacadeTest {
 
         memberProfileFacade.createMember(request);
 
-        for (int i = 0; i < 20; i++) {
-            CreateProfileRequest profileDto = new CreateProfileRequest("홍길동", "01098765432",
-                "서울특별시 종로구 청계천로 85 17층(관철동, 삼일빌딩) 한국지역정보개발원");
-
-            CreateMemberRequest memberRequest = new CreateMemberRequest(
-                "member" + i,
-                "회원",
-                "test123@" + i,
-                profileDto
-            );
-
-            memberProfileFacade.createMember(memberRequest);
-        }
+        generateMembers();
 
         List<MemberInfoResponse> responses = memberProfileFacade.findMembers(0, 10, "");
 
@@ -116,19 +104,7 @@ class MemberProfileFacadeTest {
 
         memberProfileFacade.createMember(request);
 
-        for (int i = 0; i < 20; i++) {
-            CreateProfileRequest profileDto = new CreateProfileRequest("홍길동", "01098765432",
-                "서울특별시 종로구 청계천로 85 17층(관철동, 삼일빌딩) 한국지역정보개발원");
-
-            CreateMemberRequest memberRequest = new CreateMemberRequest(
-                "member" + i,
-                "회원",
-                "test123@" + i,
-                profileDto
-            );
-
-            memberProfileFacade.createMember(memberRequest);
-        }
+        generateMembers();
 
         String name = "테스트";
         List<MemberInfoResponse> responses = memberProfileFacade.findMembers(0, 5, name);
@@ -145,11 +121,8 @@ class MemberProfileFacadeTest {
 
         MemberResponse member = memberProfileFacade.createMember(request);
 
-        CreateProfileRequest profileRequest = new CreateProfileRequest(
-            "닉네임생성",
-            "01099999999",
-            "서울특별시 성북구 화랑도 11길 26 103동 1602호 (하월곡동, 한국아파트)"
-        );
+        CreateProfileRequest profileRequest =
+            generateCreateProfileRequest();
 
         ProfileResponse response =
             memberProfileFacade.createProfile(profileRequest, member.getMemberNo());
@@ -192,11 +165,8 @@ class MemberProfileFacadeTest {
 
         MemberResponse member = memberProfileFacade.createMember(request);
 
-        CreateProfileRequest profileRequest = new CreateProfileRequest(
-            "닉네임생성",
-            "01099999999",
-            "서울특별시 성북구 화랑도 11길 26 103동 1602호 (하월곡동, 한국아파트)"
-        );
+        CreateProfileRequest profileRequest =
+            generateCreateProfileRequest();
 
         memberProfileFacade.createProfile(profileRequest, member.getMemberNo());
 
@@ -204,5 +174,30 @@ class MemberProfileFacadeTest {
             member.getMemberNo());
 
         assertThat(nickname).isEqualTo(member.getProfile().getNickname());
+    }
+
+    private void generateMembers() {
+        for (int i = 0; i < 20; i++) {
+            CreateProfileRequest profileDto = new CreateProfileRequest("홍길동", "01098765432",
+                "서울특별시 종로구 청계천로 85 17층(관철동, 삼일빌딩) 한국지역정보개발원");
+
+            CreateMemberRequest memberRequest = new CreateMemberRequest(
+                "member" + i,
+                "회원",
+                "test123@" + i,
+                profileDto
+            );
+
+            memberProfileFacade.createMember(memberRequest);
+        }
+    }
+
+    private static CreateProfileRequest generateCreateProfileRequest() {
+        CreateProfileRequest profileRequest = new CreateProfileRequest(
+            "닉네임생성",
+            "01099999999",
+            "서울특별시 성북구 화랑도 11길 26 103동 1602호 (하월곡동, 한국아파트)"
+        );
+        return profileRequest;
     }
 }

@@ -52,10 +52,10 @@ class MemberRepositoryTest {
 
         memberRepository.saveAndFlush(member);
 
-        Member findMember = memberRepository.findByLoginId("testId").orElseThrow();
+        Member findMember = memberRepository.findByLoginId("testid").orElseThrow();
 
-        assertThat(findMember.getLoginId()).isEqualTo("testId");
-        assertThat(findMember.getName()).isEqualTo("testName");
+        assertThat(findMember.getLoginId()).isEqualTo("testid");
+        assertThat(findMember.getName()).isEqualTo("테스트");
         assertThat(findMember.getPassword()).isEqualTo("testPassword");
         assertThat(findMember.getMemberStatus()).isEqualTo(MemberStatus.ACTIVE);
     }
@@ -70,7 +70,7 @@ class MemberRepositoryTest {
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "memberNo"));
 
-        Page<Member> findMembers = memberRepository.findMembersByNameContaining("테스트", pageRequest);
+        Page<Member> findMembers = memberRepository.findMembersByNameContaining("회원", pageRequest);
 
         assertThat(findMembers.getContent()).isEmpty();
     }
@@ -106,7 +106,7 @@ class MemberRepositoryTest {
         Page<Member> findMembers =
             memberRepository.findMembersByNameContaining("", pageRequest);
 
-        findMembers.forEach(member -> assertThat(member.getName()).contains("testName"));
+        findMembers.forEach(member -> assertThat(member.getName()).contains("테스트"));
         assertThat(findMembers.getContent()).hasSize(10);
     }
 
@@ -122,16 +122,16 @@ class MemberRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "memberNo"));
 
         Page<Member> findMembers =
-            memberRepository.findMembersByNameContaining("testName", pageRequest);
+            memberRepository.findMembersByNameContaining("테스트", pageRequest);
 
-        findMembers.forEach(member -> assertThat(member.getName()).contains("testName"));
+        findMembers.forEach(member -> assertThat(member.getName()).contains("테스트"));
         assertThat(findMembers.getContent()).hasSize(10);
     }
 
     private static Member generateMember() {
         return Member.builder()
-            .loginId("testId")
-            .name("testName")
+            .loginId("testid")
+            .name("테스트")
             .password("testPassword")
             .build();
     }
@@ -139,8 +139,8 @@ class MemberRepositoryTest {
     private static List<Member> generateMembers() {
         return IntStream.range(0, 30)
             .mapToObj(i -> Member.builder()
-                .loginId("testId" + i)
-                .name("testName" + i)
+                .loginId("testid" + i)
+                .name("테스트")
                 .password("testPassword" + i)
                 .build())
             .toList();
