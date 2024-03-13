@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import kr.co.mz.mzdinterviewassignment.dto.response.error.ErrorResponse;
 import kr.co.mz.mzdinterviewassignment.exception.member.DuplicateLoginIdException;
 import kr.co.mz.mzdinterviewassignment.exception.member.NotFoundMemberException;
+import kr.co.mz.mzdinterviewassignment.exception.profile.CannotDeleteProfileException;
 import kr.co.mz.mzdinterviewassignment.exception.profile.EmptyProfileException;
 import kr.co.mz.mzdinterviewassignment.exception.profile.NonMatchMemberNoException;
 import kr.co.mz.mzdinterviewassignment.exception.profile.NotFoundProfileException;
@@ -140,6 +141,16 @@ public class ApiControllerAdvice {
             .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.name())
+                .message(e.getMessage())
+                .build());
+    }
+
+    @ExceptionHandler(CannotDeleteProfileException.class)
+    public ResponseEntity<ErrorResponse> handleCannotDeleteProfileException(CannotDeleteProfileException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(ErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .error(HttpStatus.CONFLICT.name())
                 .message(e.getMessage())
                 .build());
     }
