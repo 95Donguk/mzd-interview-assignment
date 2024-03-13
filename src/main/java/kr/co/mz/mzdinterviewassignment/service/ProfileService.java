@@ -54,9 +54,11 @@ public class ProfileService {
         List<Profile> profiles = profileRepository.findAllByMember(member);
 
         if (profiles.size() == 1) {
-            return ProfileResponse.generateProfile(
+            Profile updatedProfile =
                 profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
-                    ProfileStatus.MAIN));
+                    ProfileStatus.MAIN);
+            profileRepository.saveAndFlush(updatedProfile);
+            return ProfileResponse.generateProfile(updatedProfile);
         }
 
         if (isMainProfile(dto.getProfileStatus())) {
@@ -70,9 +72,10 @@ public class ProfileService {
                 .ifPresent(p -> p.updateProfileStatus(ProfileStatus.MAIN));
         }
 
-        return ProfileResponse.generateProfile(
-            profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
-                dto.getProfileStatus()));
+        Profile updatedProfile = profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
+            dto.getProfileStatus());
+        profileRepository.saveAndFlush(updatedProfile);
+        return ProfileResponse.generateProfile(updatedProfile);
     }
 
     @Transactional
