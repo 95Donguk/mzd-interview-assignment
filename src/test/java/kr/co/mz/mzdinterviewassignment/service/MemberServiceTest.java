@@ -11,7 +11,6 @@ import kr.co.mz.mzdinterviewassignment.domain.member.Member;
 import kr.co.mz.mzdinterviewassignment.domain.member.MemberStatus;
 import kr.co.mz.mzdinterviewassignment.dto.request.member.CreateMemberRequest;
 import kr.co.mz.mzdinterviewassignment.dto.request.profile.CreateProfileRequest;
-import kr.co.mz.mzdinterviewassignment.dto.response.member.MemberResponse;
 import kr.co.mz.mzdinterviewassignment.exception.member.DuplicateLoginIdException;
 import kr.co.mz.mzdinterviewassignment.exception.member.NotFoundMemberException;
 import kr.co.mz.mzdinterviewassignment.repository.MemberRepository;

@@ -2,7 +2,6 @@ package kr.co.mz.mzdinterviewassignment.dto.request.profile;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import kr.co.mz.mzdinterviewassignment.domain.profile.Profile;
 import kr.co.mz.mzdinterviewassignment.domain.profile.ProfileStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
