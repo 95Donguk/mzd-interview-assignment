@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
+/**
+ * Auditing 활성화 하는 어노테이션
+ */
 @EnableJpaAuditing
 public class MzdInterviewAssignmentApplication {
 

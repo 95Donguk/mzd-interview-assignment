@@ -14,6 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+/**
+ * JPA와 관련된 설정만 로드해서 테스트를 진행합니다.
+ * 내부적으로 트랜잭션 어노테이션이 포함되어 있어 테스트 코드가 종료하면 데이터베이스는 롤백됩니다.
+ * 기본적으로 임베디드 데이터베이스를 사용합니다.
+ */
 @DataJpaTest
 class MemberRepositoryTest {
 

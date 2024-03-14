@@ -25,6 +25,10 @@ import org.springframework.data.domain.Sort;
 
 class MemberServiceTest {
 
+    /**
+     * 스프링 빈에 등록하지 않고 직접 객체를 초기화해서 사용하는 방식으로
+     * 이 방식이 객체 생성이 더 빠르게 동작합니다.
+     */
     private final MemberRepository memberRepository = Mockito.mock(MemberRepository.class);
     private MemberService memberService;
 

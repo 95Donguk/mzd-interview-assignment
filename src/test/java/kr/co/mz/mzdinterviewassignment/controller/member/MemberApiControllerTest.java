@@ -36,13 +36,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+/**
+ * @WebMvcTest
+ * - 대상 클래스만 로드해서 웹에서 사용되는 요청과 응답에 대한 테스트를 수행 할 수 있습니다.
+ */
 @WebMvcTest(MemberApiController.class)
+/**
+ * 테스트 돌릴 때 Application를 작동하게 되는데 그 때 JPA 관련 빈들이 올라오기를 요구하는데
+ * mvc만 관련된 빈들만 찾아서 올리므로 JPA 관련 에러가 발생하므로 목빈으로 등록했습니다.
+ */
 @MockBean(JpaMetamodelMappingContext.class)
 class MemberApiControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+    /**
+     * 가짜 객체를 생성해서 주입하는 역할을 합니다.
+     * 실제 객체가 아니기 때문에 실제 행위를 수행하지 않습니다.
+     */
     @MockBean
     MemberProfileFacade memberProfileFacade;
 
@@ -71,6 +83,9 @@ class MemberApiControllerTest {
             .createdAt(LocalDateTime.now())
             .build();
 
+        /**
+         * createMember 메서드가 동작하면 아래 값으로 반환해라라는 의미
+         */
         given(memberProfileFacade.createMember(any(CreateMemberRequest.class)))
             .willReturn(response);
 
@@ -78,6 +93,9 @@ class MemberApiControllerTest {
 
         mockMvc.perform(
                 post("/api/members")
+                    /**
+                     * 요청 바디 파라미터가 Json 형태로 필요하므로 직렬화
+                     */
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())

@@ -10,6 +10,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 역직렬화(JSON -> 객체)할 때 Getter와 기본 생성자가 필요하기 때문에 지정 했습니다.
+ * Jackson 의 ObjectMapper 가 역직렬화 시에 기본 생성자를 이용하여 객체를 생성한 후에 리플렉션을 이용해서 필드를 가져옵니다.
+ * 리플렉션을 이용하기때문에 access 레벨을 PRIVATE 로 설정해도 될 것 같음
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

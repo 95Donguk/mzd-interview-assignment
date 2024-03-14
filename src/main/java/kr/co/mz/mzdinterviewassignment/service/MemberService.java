@@ -13,6 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @Service는 서비스 계층의 빈으로 등록하고 필요할 때 빈 주입을 할 수 있도록 설정
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

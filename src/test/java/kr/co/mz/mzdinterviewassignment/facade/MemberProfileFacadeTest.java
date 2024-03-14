@@ -20,8 +20,18 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 저수준의 인터페이스들을 하나의 고수준의 인터페이스에 묶어 통합 인터페이스를 제공하는 계층이기 때문에
+ * 통합테스트로 구현 했습니다.
+ */
 @SpringBootTest
+/**
+ * 테스트가 완료 되면 자동으로 데이터베이스가 롤백이 되도록 합니다.
+ */
 @Transactional
+/**
+ * 테스트용 데이터베이스로 테스트를 작업하기 위해서 선언했습니다.
+ */
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 class MemberProfileFacadeTest {
 

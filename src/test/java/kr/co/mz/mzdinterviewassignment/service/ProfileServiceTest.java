@@ -29,12 +29,34 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * @ExtendWith(MockitoExtension.class) 어노테이션 추가
+ * - 테스트 코드에 대한 정보를 추출하기 위해 사용
+ * - 스프링 부트에서는 테스트 코드에 대한 정보를 추출하기 위해 사용
+ * - @ExtendWith: 단위 테스트에 공통적으로 확장 기능을 선언해주는 역할
+ * - MockitoExtend.class : JUnit과 모키토를 연동해 테스트를 진행할려고 함
+ */
 @ExtendWith(MockitoExtension.class)
 class ProfileServiceTest {
 
+    /**
+     * @Mock
+     * - 목 객체를 생성한다
+     * - 메서드를 갖고 있지만 내부 구현이 없는 상태로 지정
+     * - @Spy는 모든 기능을 가지고 있는 완전환 객체로 Stub하지 않은 메서드들은 원본 메소드 그대로 사용한다.
+     *      - 일부분 만 모킹하는 것
+     *      - 외부 라이브러리를 이용한 테스트에 자주 사용
+     * - Stub
+     *      - 다른 객체 대신에 가짜 객체(Mock)를 주입하여 어떤 결과를 반환하라고 정해진 답변을 준비 시킴
+     */
     @Mock
     private ProfileRepository profileRepository;
 
+    /**
+     * @InjectMocks
+     * - @Mock 또는 @Spy로 생성된 가짜 객체를 자동으로 주입시켜주는 객체
+     * - @InjectMocks 객체에서 사용할 객체를 @Mock으로 만들어 쓰면 된다.
+     */
     @InjectMocks
     private ProfileService profileService;
 
@@ -66,9 +88,23 @@ class ProfileServiceTest {
         CreateProfileRequest dto = new CreateProfileRequest("홍길동", "01098765432",
             "서울특별시 종로구 청계천로 85 17층(관철동, 삼일빌딩) 한국지역정보개발원");
 
+        /**
+         * thenReturn()
+         * - 실제 메서드를 호출하지만, 리턴 값을 임의로 정의할 수 있다.
+         * - 메서드 작업이 오래 걸리는 경우 끝날 때까지 기다려야 한다.
+         * - 실제 메서드를 호출하기 때문에 대상 메소드에 문제점이 있을 경우 발견할 수 있다.
+         */
         Mockito.when(profileRepository.findAllByMember(any(Member.class)))
             .thenReturn(profiles);
 
+        /**
+         * when()
+         *  - 어떤 동작을 할 때 ~
+         * then()
+         *  - 반환 됨
+         *  returnsFirstArg()
+         *  - 메서드의 첫번째 인자 반환
+         */
         Mockito.when(profileRepository.save(any(Profile.class)))
             .then(returnsFirstArg());
 
