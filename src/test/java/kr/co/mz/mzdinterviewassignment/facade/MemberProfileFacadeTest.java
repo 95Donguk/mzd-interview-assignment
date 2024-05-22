@@ -52,10 +52,10 @@ class MemberProfileFacadeTest {
         assertThat(member.getMemberNo()).isPositive();
         assertThat(member.getLoginId()).isEqualTo(request.getLoginId());
         assertThat(member.getName()).isEqualTo(request.getName());
-        assertThat(member.getProfile().getNickname()).isEqualTo(request.getProfile().getNickname());
+        assertThat(member.getProfile().getNickname()).isEqualTo(request.getProfile().nickname());
         assertThat(member.getProfile().getPhoneNumber()).isEqualTo(
-            request.getProfile().getPhoneNumber());
-        assertThat(member.getProfile().getAddress()).isEqualTo(request.getProfile().getAddress());
+            request.getProfile().phoneNumber());
+        assertThat(member.getProfile().getAddress()).isEqualTo(request.getProfile().address());
     }
 
     @Test
@@ -128,9 +128,9 @@ class MemberProfileFacadeTest {
             memberProfileFacade.createProfile(profileRequest, member.getMemberNo());
 
         assertThat(response.getProfileNo()).isPositive();
-        assertThat(response.getNickname()).isEqualTo(profileRequest.getNickname());
-        assertThat(response.getPhoneNumber()).isEqualTo(profileRequest.getPhoneNumber());
-        assertThat(response.getAddress()).isEqualTo(profileRequest.getAddress());
+        assertThat(response.getNickname()).isEqualTo(profileRequest.nickname());
+        assertThat(response.getPhoneNumber()).isEqualTo(profileRequest.phoneNumber());
+        assertThat(response.getAddress()).isEqualTo(profileRequest.address());
     }
 
     @Test

@@ -75,9 +75,9 @@ class ProfileServiceTest {
         ProfileResponse response = profileService.createProfile(dto, member);
 
         assertThat(response.getProfileStatus()).isEqualTo(ProfileStatus.MAIN);
-        assertThat(response.getNickname()).isEqualTo(dto.getNickname());
-        assertThat(response.getPhoneNumber()).isEqualTo(dto.getPhoneNumber());
-        assertThat(response.getAddress()).isEqualTo(dto.getAddress());
+        assertThat(response.getNickname()).isEqualTo(dto.nickname());
+        assertThat(response.getPhoneNumber()).isEqualTo(dto.phoneNumber());
+        assertThat(response.getAddress()).isEqualTo(dto.address());
 
         Mockito.verify(profileRepository, Mockito.times(1)).findAllByMember(any(Member.class));
         Mockito.verify(profileRepository, Mockito.times(1)).save(any(Profile.class));
@@ -101,9 +101,9 @@ class ProfileServiceTest {
         ProfileResponse response = profileService.createProfile(dto, member);
 
         assertThat(response.getProfileStatus()).isEqualTo(ProfileStatus.NORMAL);
-        assertThat(response.getNickname()).isEqualTo(dto.getNickname());
-        assertThat(response.getPhoneNumber()).isEqualTo(dto.getPhoneNumber());
-        assertThat(response.getAddress()).isEqualTo(dto.getAddress());
+        assertThat(response.getNickname()).isEqualTo(dto.nickname());
+        assertThat(response.getPhoneNumber()).isEqualTo(dto.phoneNumber());
+        assertThat(response.getAddress()).isEqualTo(dto.address());
 
         Mockito.verify(profileRepository, Mockito.times(1)).findAllByMember(any(Member.class));
         Mockito.verify(profileRepository, Mockito.times(1)).save(any(Profile.class));
