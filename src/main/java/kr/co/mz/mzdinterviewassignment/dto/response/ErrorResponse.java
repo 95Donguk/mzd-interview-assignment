@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public non-sealed class ApiResponse<T> extends Response {
+public final class ErrorResponse extends Response {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private final T data;
+  private final int status;
 
   @Builder
-  private ApiResponse(final String code, final String message, final T data) {
+  private ErrorResponse(final String code, final String message, final int status) {
     super(code, message);
-    this.data = data;
+    this.status = status;
   }
 }
