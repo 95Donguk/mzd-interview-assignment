@@ -7,17 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@JsonPropertyOrder({"status", "error", "message"})
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@JsonPropertyOrder({"code", "message", "status"})
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class ErrorResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private int status;
+    private final String code;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String error;
+    private final String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String message;
+    private final int status;
 }
