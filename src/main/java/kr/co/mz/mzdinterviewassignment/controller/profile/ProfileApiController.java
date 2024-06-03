@@ -53,9 +53,11 @@ public class ProfileApiController {
             .buildAndExpand(data.getProfileNo())
             .toUri();
 
-        ApiResponse<ProfileResponse> response = new ApiResponse<>(HttpStatus.CREATED.name(),
-            "회원 프로필 생성 성공",
-            data);
+        ApiResponse<ProfileResponse> response = ApiResponse.<ProfileResponse>builder()
+            .code(HttpStatus.CREATED.name())
+            .message("회원 프로필 생성 성공")
+            .data(data)
+            .build();
 
         return ResponseEntity.created(location).body(response);
     }
@@ -75,9 +77,11 @@ public class ProfileApiController {
 
         ProfileResponse data = memberProfileFacade.updateProfile(dto, profileNo, memberNo);
 
-        ApiResponse<ProfileResponse> response = new ApiResponse<>(HttpStatus.OK.name(),
-            "회원 프로필 수정 성공",
-            data);
+        ApiResponse<ProfileResponse> response = ApiResponse.<ProfileResponse>builder()
+            .code(HttpStatus.OK.name())
+            .message("회원 프로필 수정 성공")
+            .data(data)
+            .build();
 
         return ResponseEntity.ok(response);
     }
@@ -90,9 +94,11 @@ public class ProfileApiController {
 
         String nickname = memberProfileFacade.deleteProfile(profileNo, memberNo);
 
-        ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK.name(),
-            "회원 프로필 삭제 성공",
-            "삭제된 프로필 닉네임 : " + nickname);
+        ApiResponse<String> response = ApiResponse.<String>builder()
+            .code(HttpStatus.OK.name())
+            .message("회원 프로필 삭제 성공")
+            .data("삭제된 프로필 닉네임 : " + nickname)
+            .build();
 
         return ResponseEntity.ok(response);
     }

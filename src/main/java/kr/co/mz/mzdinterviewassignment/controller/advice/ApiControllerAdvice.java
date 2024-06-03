@@ -44,7 +44,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error(HttpStatus.INTERNAL_SERVER_ERROR.name())
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.name())
                 .message("요청에 실패했습니다.")
                 .build());
     }
@@ -63,7 +63,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.name())
+                .code(HttpStatus.BAD_REQUEST.name())
                 .message(e.getConstraintViolations().stream()
                     .map(violation -> violation.getPropertyPath() +
                         ": " +
@@ -88,7 +88,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.name())
+                .code(HttpStatus.BAD_REQUEST.name())
                 .message(e.getFieldErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .toList().toString())
@@ -108,7 +108,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.name())
+                .code(HttpStatus.BAD_REQUEST.name())
                 .message("JSON parse error")
                 .build());
     }
@@ -123,7 +123,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.name())
+                .code(HttpStatus.BAD_REQUEST.name())
                 .message(e.getMessage())
                 .build());
     }
@@ -138,7 +138,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.NOT_FOUND.value())
-                .error(HttpStatus.NOT_FOUND.name())
+                .code(HttpStatus.NOT_FOUND.name())
                 .message(e.getMessage())
                 .build());
     }
@@ -152,7 +152,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.name())
+                .code(HttpStatus.BAD_REQUEST.name())
                 .message(e.getMessage())
                 .build());
     }
@@ -167,7 +167,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.name())
+                .code(HttpStatus.BAD_REQUEST.name())
                 .message(e.getMessage())
                 .build());
     }
@@ -181,7 +181,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.NOT_FOUND.value())
-                .error(HttpStatus.NOT_FOUND.name())
+                .code(HttpStatus.NOT_FOUND.name())
                 .message(e.getMessage())
                 .build());
     }
@@ -195,7 +195,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.name())
+                .code(HttpStatus.BAD_REQUEST.name())
                 .message(e.getMessage())
                 .build());
     }
@@ -210,7 +210,7 @@ public class ApiControllerAdvice {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(ErrorResponse.builder()
                 .status(HttpStatus.CONFLICT.value())
-                .error(HttpStatus.CONFLICT.name())
+                .code(HttpStatus.CONFLICT.name())
                 .message(e.getMessage())
                 .build());
     }

@@ -61,15 +61,11 @@ public class MemberApiController {
             .buildAndExpand(data.getMemberNo())
             .toUri();
 
-        /**
-         * @return
-         * 상태 코드 이름
-         * 메시지
-         * 데이터
-         */
-        ApiResponse<MemberResponse> response = new ApiResponse<>(HttpStatus.CREATED.name(),
-            "회원 생성 성공",
-            data);
+        ApiResponse<MemberResponse> response = ApiResponse.<MemberResponse>builder()
+            .code(HttpStatus.CREATED.name())
+            .message("회원 생성 성공")
+            .data(data)
+            .build();
 
         return ResponseEntity.created(location).body(response);
     }
@@ -86,9 +82,11 @@ public class MemberApiController {
 
         String loginId = memberProfileFacade.deleteMember(memberNo);
 
-        ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK.name(),
-            "회원 삭제 성공",
-            "삭제된 회원 아이디 : " + loginId);
+        ApiResponse<String> response = ApiResponse.<String>builder()
+            .code(HttpStatus.OK.name())
+            .message("회원 삭제 성공")
+            .data("삭제된 회원 아이디 : " + loginId)
+            .build();
 
         /**
          * 200번(OK)로 반환되지만 204(No Content)로 반환 할 수도 있다.
@@ -116,9 +114,11 @@ public class MemberApiController {
 
         MemberDetailsResponse data = memberProfileFacade.findMemberDetails(memberNo);
 
-        ApiResponse<MemberDetailsResponse> response = new ApiResponse<>(HttpStatus.OK.name(),
-            "회원 상세 조회 성공",
-            data);
+        ApiResponse<MemberDetailsResponse> response = ApiResponse.<MemberDetailsResponse>builder()
+            .code(HttpStatus.OK.name())
+            .message("회원 상세 조회 성공")
+            .data(data)
+            .build();
 
         return ResponseEntity.ok(response);
     }
@@ -136,9 +136,11 @@ public class MemberApiController {
 
         List<MemberInfoResponse> data = memberProfileFacade.findMembers(page, size, name);
 
-        ApiResponse<List<MemberInfoResponse>> response = new ApiResponse<>(HttpStatus.OK.name(),
-            "회원 전체 조회 성공",
-            data);
+        ApiResponse<List<MemberInfoResponse>> response = ApiResponse.<List<MemberInfoResponse>>builder()
+            .code(HttpStatus.OK.name())
+            .message("회원 전체 조회 성공")
+            .data(data)
+            .build();
 
         return ResponseEntity.ok(response);
     }
