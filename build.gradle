@@ -30,6 +30,7 @@ dependencies {
     // GraalVM 호환성을 위해 하이버네이트 다운그레이드
     implementation 'org.hibernate.orm:hibernate-core:6.4.2.Final'
 
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
@@ -41,5 +42,23 @@ tasks.named('test') {
 }
 
 graalvmNative {
+    // 네이티브 이미지 생성을 위한 바이너리 설정
+    binaries {
+        // 주 바이너리 설정(주 실행 파일)
+        main {
+            // 네이티브 이미지 생성 또는 실패시 오류 보고
+            buildArgs.add('--no-fallback')
+        }
+    }
+    // 테스트 건너뛰기
     testSupport = false
+}
+
+task compressNativeImage(type: Exec) {
+    dependsOn tasks.named('nativeCompile')
+    commandLine 'upx', '--best', '--lzma', "$buildDir/native/nativeCompile/mzd-interview-assignment"
+}
+
+tasks.named('nativeCompile') {
+    finalizedBy compressNativeImage
 }
