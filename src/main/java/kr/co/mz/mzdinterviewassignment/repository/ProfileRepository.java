@@ -8,8 +8,9 @@ import kr.co.mz.mzdinterviewassignment.domain.profile.ProfileStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-    Optional<Profile> findProfileByMemberAndProfileStatus(final Member member,
-                                                          final ProfileStatus profileStatus);
 
-    List<Profile> findAllByMember(final Member member);
+  Optional<Profile> findProfileByMemberAndProfileStatus(final Member member,
+      final ProfileStatus profileStatus);
+
+  List<Profile> findAllByMember(final Member member);
 }

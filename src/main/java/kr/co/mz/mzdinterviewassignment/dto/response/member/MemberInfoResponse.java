@@ -15,26 +15,27 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 public class MemberInfoResponse {
-    private Long memberNo;
-    private String loginId;
-    private String name;
-    private String password;
-    private MemberStatus memberStatus;
-    private LocalDateTime updatedAt;
-    private LocalDateTime createdAt;
-    private ProfileResponse mainProfile;
 
-    public static MemberInfoResponse generateMemberInfo(final Member member,
-                                                        final ProfileResponse mainProfile) {
-        return MemberInfoResponse.builder()
-            .memberNo(member.getMemberNo())
-            .loginId(member.getLoginId())
-            .name(member.getName())
-            .password(member.getPassword())
-            .memberStatus(member.getMemberStatus())
-            .updatedAt(member.getUpdatedAt())
-            .createdAt(member.getCreatedAt())
-            .mainProfile(mainProfile)
-            .build();
-    }
+  private Long memberNo;
+  private String loginId;
+  private String name;
+  private String password;
+  private MemberStatus memberStatus;
+  private LocalDateTime updatedAt;
+  private LocalDateTime createdAt;
+  private ProfileResponse mainProfile;
+
+  public static MemberInfoResponse generateMemberInfo(final Member member,
+      final ProfileResponse mainProfile) {
+    return MemberInfoResponse.builder()
+        .memberNo(member.getMemberNo())
+        .loginId(member.getLoginId())
+        .name(member.getName())
+        .password(member.getPassword())
+        .memberStatus(member.getMemberStatus())
+        .updatedAt(member.getUpdatedAt())
+        .createdAt(member.getCreatedAt())
+        .mainProfile(mainProfile)
+        .build();
+  }
 }

@@ -24,35 +24,35 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "MEMBER_TBL")
 public class Member extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberNo;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long memberNo;
 
-    @NotNull(message = "로그인 아이디는 필수입니다")
-    @Column(unique = true)
-    private String loginId;
+  @NotNull(message = "로그인 아이디는 필수입니다")
+  @Column(unique = true)
+  private String loginId;
 
-    @NotNull(message = "이름은 필수입니다")
-    private String name;
+  @NotNull(message = "이름은 필수입니다")
+  private String name;
 
-    @NotNull(message = "비밀번호는 필수입니다")
-    private String password;
+  @NotNull(message = "비밀번호는 필수입니다")
+  private String password;
 
-    @NotNull(message = "회원 상태는 필수입니다")
-    @Enumerated(EnumType.STRING)
-    @Comment("ACTIVE: 계정 활성, DELETED: 계정 탈퇴")
-    private MemberStatus memberStatus;
+  @NotNull(message = "회원 상태는 필수입니다")
+  @Enumerated(EnumType.STRING)
+  @Comment("ACTIVE: 계정 활성, DELETED: 계정 탈퇴")
+  private MemberStatus memberStatus;
 
-    @Builder
-    public Member(final String loginId, final String name, final String password) {
-        this.loginId = loginId;
-        this.name = name;
-        this.password = password;
-        this.memberStatus = MemberStatus.ACTIVE;
-    }
+  @Builder
+  public Member(final String loginId, final String name, final String password) {
+    this.loginId = loginId;
+    this.name = name;
+    this.password = password;
+    this.memberStatus = MemberStatus.ACTIVE;
+  }
 
-    public String delete() {
-        this.memberStatus = MemberStatus.DELETED;
-        return this.loginId;
-    }
+  public String delete() {
+    this.memberStatus = MemberStatus.DELETED;
+    return this.loginId;
+  }
 }

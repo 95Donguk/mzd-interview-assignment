@@ -19,51 +19,51 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MemberService {
 
-    private final MemberRepository memberRepository;
+  private final MemberRepository memberRepository;
 
-    @Transactional
-    public Member createMember(final CreateMemberRequest dto) {
-        log.info("회원 생성 시작");
+  @Transactional
+  public Member createMember(final CreateMemberRequest dto) {
+    log.info("회원 생성 시작");
 
-        if (hasDuplicateLoginId(dto.getLoginId())) {
-            throw new DuplicateLoginIdException(dto.getLoginId());
-        }
-
-        Member member = memberRepository.save(dto.toEntity());
-        log.info("회원 생성 성공");
-        return member;
+    if (hasDuplicateLoginId(dto.getLoginId())) {
+      throw new DuplicateLoginIdException(dto.getLoginId());
     }
 
-    private boolean hasDuplicateLoginId(final String loginId) {
-        log.info("중복된 아이디가 있는지 확인");
-        return memberRepository.findByLoginId(loginId).isPresent();
-    }
+    Member member = memberRepository.save(dto.toEntity());
+    log.info("회원 생성 성공");
+    return member;
+  }
 
-    @Transactional
-    public String deleteMember(final Long memberNo) {
-        log.info("회원 삭제 시작");
+  private boolean hasDuplicateLoginId(final String loginId) {
+    log.info("중복된 아이디가 있는지 확인");
+    return memberRepository.findByLoginId(loginId).isPresent();
+  }
 
-        Member member = memberRepository.findById(memberNo)
-            .orElseThrow(() -> new NotFoundMemberException(memberNo));
+  @Transactional
+  public String deleteMember(final Long memberNo) {
+    log.info("회원 삭제 시작");
 
-        log.info("회원 삭제 성공");
-        return member.delete();
-    }
+    Member member = memberRepository.findById(memberNo)
+        .orElseThrow(() -> new NotFoundMemberException(memberNo));
 
-    public Member findMember(final Long memberNo) {
-        log.info("회원 식별번호 {} 의 정보 조회", memberNo);
-        return memberRepository.findById(memberNo)
-            .orElseThrow(() -> new NotFoundMemberException(memberNo));
-    }
+    log.info("회원 삭제 성공");
+    return member.delete();
+  }
 
-    public Page<Member> findMembersContainName(final String name,
-                                               final int page,
-                                               final int size) {
-        log.info("이름에 {} 들어간 회원 전체 조회", name);
+  public Member findMember(final Long memberNo) {
+    log.info("회원 식별번호 {} 의 정보 조회", memberNo);
+    return memberRepository.findById(memberNo)
+        .orElseThrow(() -> new NotFoundMemberException(memberNo));
+  }
 
-        PageRequest pageRequest =
-            PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberNo"));
+  public Page<Member> findMembersContainName(final String name,
+      final int page,
+      final int size) {
+    log.info("이름에 {} 들어간 회원 전체 조회", name);
 
-        return memberRepository.findMembersByNameContaining(name, pageRequest);
-    }
+    PageRequest pageRequest =
+        PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberNo"));
+
+    return memberRepository.findMembersByNameContaining(name, pageRequest);
+  }
 }

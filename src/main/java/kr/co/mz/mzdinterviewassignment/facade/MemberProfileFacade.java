@@ -23,54 +23,63 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MemberProfileFacade {
 
-    private final MemberService memberService;
-    private final ProfileService profileService;
+  private final MemberService memberService;
+  private final ProfileService profileService;
 
-    @Transactional
-    public MemberResponse createMember(final CreateMemberRequest dto) {
-        Member member = memberService.createMember(dto);
-        ProfileResponse response = profileService.createProfile(dto.getProfile(), member);
-        return MemberResponse.generateMemberResponse(member, response);
-    }
+  @Transactional
+  public MemberResponse createMember(final CreateMemberRequest dto) {
+    Member member = memberService.createMember(dto);
+    ProfileResponse response = profileService.createProfile(dto.getProfile(), member);
+    return MemberResponse.generateMemberResponse(member, response);
+  }
 
-    @Transactional
-    public String deleteMember(final Long memberNo) {
-        return memberService.deleteMember(memberNo);
-    }
+  @Transactional
+  public String deleteMember(final Long memberNo) {
+    return memberService.deleteMember(memberNo);
+  }
 
-    public MemberDetailsResponse findMemberDetails(final Long memberNo) {
-        Member member = memberService.findMember(memberNo);
-        List<ProfileResponse> responses = profileService.findProfiles(member);
+  public MemberDetailsResponse findMemberDetails(final Long memberNo) {
+    Member member = memberService.findMember(memberNo);
+    List<ProfileResponse> responses = profileService.findProfiles(member);
 
-        return MemberDetailsResponse.generateMemberDetails(member, responses);
-    }
+    return MemberDetailsResponse.generateMemberDetails(member, responses);
+  }
 
-    public List<MemberInfoResponse> findMembers(final int page, final int size, final String name) {
-        Page<Member> members = memberService.findMembersContainName(name, page, size);
+  public List<MemberInfoResponse> findMembers(final int page, final int size, final String name) {
+    Page<Member> members = memberService.findMembersContainName(name, page, size);
 
-        return members.stream().map(member -> {
-            ProfileResponse response = profileService.findMainProfile(member);
-            return MemberInfoResponse.generateMemberInfo(member, response);
-        }).toList();
-    }
+    return members.stream().map(member -> {
+      ProfileResponse response = profileService.findMainProfile(member);
+      return MemberInfoResponse.generateMemberInfo(member, response);
+    }).toList();
+  }
 
-    @Transactional
-    public ProfileResponse createProfile(final CreateProfileRequest dto, final Long memberNo) {
-        Member member = memberService.findMember(memberNo);
-        return profileService.createProfile(dto, member);
-    }
+  @Transactional
+  public ProfileResponse createProfile(final CreateProfileRequest dto, final Long memberNo) {
+    Member member = memberService.findMember(memberNo);
+    return profileService.createProfile(dto, member);
+  }
 
-    @Transactional
-    public ProfileResponse updateProfile(final UpdateProfileRequest dto,
-                                         final Long profileNo,
-                                         final Long memberNo) {
-        Member member = memberService.findMember(memberNo);
-        return profileService.updateProfile(dto, profileNo, member);
-    }
+  @Transactional
+  public ProfileResponse updateProfile(final UpdateProfileRequest dto,
+      final Long profileNo,
+      final Long memberNo) {
+    Member member = memberService.findMember(memberNo);
+    return profileService.updateProfile(dto, profileNo, member);
+  }
 
-    @Transactional
-    public String deleteProfile(final Long profileNo, final Long memberNo) {
-        Member member = memberService.findMember(memberNo);
-        return profileService.deleteProfile(profileNo, member);
-    }
+  @Transactional
+  public String deleteProfile(final Long profileNo, final Long memberNo) {
+    Member member = memberService.findMember(memberNo);
+    return profileService.deleteProfile(profileNo, member);
+  }
+
+  public List<ProfileResponse> findProfiles(final Long memberNo) {
+    Member member = memberService.findMember(memberNo);
+    return profileService.findProfiles(member);
+  }
+
+  public ProfileResponse findProfile(final Long profileNo) {
+    return profileService.findProfile(profileNo);
+  }
 }

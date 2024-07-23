@@ -5,10 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import kr.co.mz.mzdinterviewassignment.domain.member.Member;
 import kr.co.mz.mzdinterviewassignment.domain.profile.Profile;
 import kr.co.mz.mzdinterviewassignment.domain.profile.ProfileStatus;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 public record CreateProfileRequest(
     @Pattern(
@@ -25,6 +21,7 @@ public record CreateProfileRequest(
 
     String address
 ) {
+
   public Profile toEntity(final ProfileStatus profileStatus,
       final Member member) {
     return Profile.builder()

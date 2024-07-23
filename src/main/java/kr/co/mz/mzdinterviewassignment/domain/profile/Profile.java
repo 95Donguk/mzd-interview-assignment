@@ -25,47 +25,47 @@ import org.hibernate.annotations.Comment;
 @Table(name = "PROFILE_TBL")
 public class Profile extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long profileNo;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long profileNo;
 
-    @NotNull(message = "별명은 필수입니다")
-    private String nickname;
+  @NotNull(message = "별명은 필수입니다")
+  private String nickname;
 
-    @NotNull(message = "휴대전화 번호는 필수입니다")
-    private String phoneNumber;
+  @NotNull(message = "휴대전화 번호는 필수입니다")
+  private String phoneNumber;
 
-    private String address;
+  private String address;
 
-    @NotNull(message = "프로필 상태는 필수입니다")
-    @Enumerated(EnumType.STRING)
-    @Comment("MAIN: 메인 프로필, NORMAL: 일반 프로필")
-    private ProfileStatus profileStatus;
+  @NotNull(message = "프로필 상태는 필수입니다")
+  @Enumerated(EnumType.STRING)
+  @Comment("MAIN: 메인 프로필, NORMAL: 일반 프로필")
+  private ProfileStatus profileStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_no")
-    private Member member;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "member_no")
+  private Member member;
 
-    @Builder
-    public Profile(final String nickname, final String phoneNumber, final String address,
-                   final ProfileStatus profileStatus, final Member member) {
-        this.nickname = nickname;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.profileStatus = profileStatus;
-        this.member = member;
-    }
+  @Builder
+  public Profile(final String nickname, final String phoneNumber, final String address,
+      final ProfileStatus profileStatus, final Member member) {
+    this.nickname = nickname;
+    this.phoneNumber = phoneNumber;
+    this.address = address;
+    this.profileStatus = profileStatus;
+    this.member = member;
+  }
 
-    public Profile update(final String nickname, final String phoneNumber, final String address,
-                          final ProfileStatus profileStatus) {
-        this.nickname = nickname;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.profileStatus = profileStatus;
-        return this;
-    }
+  public Profile update(final String nickname, final String phoneNumber, final String address,
+      final ProfileStatus profileStatus) {
+    this.nickname = nickname;
+    this.phoneNumber = phoneNumber;
+    this.address = address;
+    this.profileStatus = profileStatus;
+    return this;
+  }
 
-    public void updateProfileStatus(final ProfileStatus profileStatus) {
-        this.profileStatus = profileStatus;
-    }
+  public void updateProfileStatus(final ProfileStatus profileStatus) {
+    this.profileStatus = profileStatus;
+  }
 }

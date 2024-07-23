@@ -23,111 +23,122 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProfileService {
-    public static final int MIN_PROFILES_COUNT = 1;
 
-    private final ProfileRepository profileRepository;
+  public static final int MIN_PROFILES_COUNT = 1;
 
-    @Transactional
-    public ProfileResponse createProfile(final CreateProfileRequest dto, final Member member) {
+  private final ProfileRepository profileRepository;
 
-        log.info("프로필 생성 시작");
+  @Transactional
+  public ProfileResponse createProfile(final CreateProfileRequest dto, final Member member) {
 
-        List<Profile> profiles = profileRepository.findAllByMember(member);
+    log.info("프로필 생성 시작");
 
-        ProfileStatus profileStatus = setProfileStatus(profiles);
-        log.info("프로필 상태 {}", profileStatus.name());
+    List<Profile> profiles = profileRepository.findAllByMember(member);
 
-        Profile savedProfile = profileRepository.save(dto.toEntity(profileStatus, member));
-        log.info("프로필 생성 완료 회원 식별 번호 : {}", savedProfile.getMember().getLoginId());
-        return ProfileResponse.generateProfile(savedProfile);
+    ProfileStatus profileStatus = setProfileStatus(profiles);
+    log.info("프로필 상태 {}", profileStatus.name());
+
+    Profile savedProfile = profileRepository.save(dto.toEntity(profileStatus, member));
+    log.info("프로필 생성 완료 회원 식별 번호 : {}", savedProfile.getMember().getLoginId());
+    return ProfileResponse.generateProfile(savedProfile);
+  }
+
+  @Transactional
+  public ProfileResponse updateProfile(final UpdateProfileRequest dto,
+      final Long profileNo,
+      final Member member) {
+
+    log.info("프로필 수정 시작");
+    Profile profile = profileRepository.findById(profileNo)
+        .orElseThrow(() -> new NotFoundProfileException(profileNo));
+
+    checkMatchMemberNo(member, profile);
+
+    List<Profile> profiles = profileRepository.findAllByMember(member);
+
+    if (profiles.size() == MIN_PROFILES_COUNT) {
+      Profile updatedProfile =
+          profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
+              ProfileStatus.MAIN);
+      profileRepository.saveAndFlush(updatedProfile);
+      return ProfileResponse.generateProfile(updatedProfile);
     }
 
-    @Transactional
-    public ProfileResponse updateProfile(final UpdateProfileRequest dto,
-                                         final Long profileNo,
-                                         final Member member) {
+    if (isMainProfile(dto.getProfileStatus())) {
+      log.info("기존 메인 프로필을 일반 프로필로 전환");
+      profiles.forEach(p -> p.updateProfileStatus(ProfileStatus.NORMAL));
+    } else if (isMainProfile(profile.getProfileStatus())) {
+      log.info("메인 프로필을 일반 프로필로 전환으로 인해 회원의 다른 프로필을 메인 프로필로 임의 지정");
+      profiles
+          .stream().filter(p -> p.getProfileStatus().equals(ProfileStatus.NORMAL))
+          .findFirst()
+          .ifPresent(p -> p.updateProfileStatus(ProfileStatus.MAIN));
+    }
 
-        log.info("프로필 수정 시작");
+    Profile updatedProfile = profile.update(dto.getNickname(), dto.getPhoneNumber(),
+        dto.getAddress(),
+        dto.getProfileStatus());
+    profileRepository.saveAndFlush(updatedProfile);
+    return ProfileResponse.generateProfile(updatedProfile);
+  }
+
+  @Transactional
+  public String deleteProfile(final Long profileNo, final Member member) {
+    log.info("프로필 삭제 시작");
+
+    Profile profile = profileRepository.findById(profileNo)
+        .orElseThrow(() -> new NotFoundProfileException(profileNo));
+
+    checkMatchMemberNo(member, profile);
+
+    List<Profile> profiles = profileRepository.findAllByMember(member);
+
+    if (profiles.size() == MIN_PROFILES_COUNT) {
+      throw new CannotDeleteProfileException(member.getLoginId());
+    }
+
+    profileRepository.delete(profile);
+    log.info("프로필 삭제 완료");
+
+    return profile.getNickname();
+  }
+
+  public ProfileResponse findMainProfile(final Member member) {
+    log.info("{} 의 메인 프로필 조회 시작", member.getLoginId());
+
+    Profile profile =
+        profileRepository.findProfileByMemberAndProfileStatus(member, ProfileStatus.MAIN)
+            .orElseGet(() -> profileRepository.findAllByMember(member)
+                .stream().findFirst()
+                .orElseThrow(() -> new EmptyProfileException(member.getLoginId())));
+
+    log.info("{} 의 메인 프로필 조회 완료", member.getLoginId());
+
+    return ProfileResponse.generateProfile(profile);
+  }
+
+  public List<ProfileResponse> findProfiles(final Member member) {
+    log.info("{} 의 프로필 조회", member.getLoginId());
+
+    List<ProfileResponse> responses = profileRepository.findAllByMember(member)
+        .stream()
+        .map(ProfileResponse::generateProfile)
+        .toList();
+
+    if (responses.isEmpty()) {
+      throw new EmptyProfileException(member.getLoginId());
+    }
+
+    return responses;
+  }
+
+    public ProfileResponse findProfile(Long profileNo) {
+        log.info("{} 프로필 조회", profileNo);
+
         Profile profile = profileRepository.findById(profileNo)
             .orElseThrow(() -> new NotFoundProfileException(profileNo));
-
-        checkMatchMemberNo(member, profile);
-
-        List<Profile> profiles = profileRepository.findAllByMember(member);
-
-        if (profiles.size() == MIN_PROFILES_COUNT) {
-            Profile updatedProfile =
-                profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
-                    ProfileStatus.MAIN);
-            profileRepository.saveAndFlush(updatedProfile);
-            return ProfileResponse.generateProfile(updatedProfile);
-        }
-
-        if (isMainProfile(dto.getProfileStatus())) {
-            log.info("기존 메인 프로필을 일반 프로필로 전환");
-            profiles.forEach(p -> p.updateProfileStatus(ProfileStatus.NORMAL));
-        } else if (isMainProfile(profile.getProfileStatus())) {
-            log.info("메인 프로필을 일반 프로필로 전환으로 인해 회원의 다른 프로필을 메인 프로필로 임의 지정");
-            profiles
-                .stream().filter(p -> p.getProfileStatus().equals(ProfileStatus.NORMAL))
-                .findFirst()
-                .ifPresent(p -> p.updateProfileStatus(ProfileStatus.MAIN));
-        }
-
-        Profile updatedProfile = profile.update(dto.getNickname(), dto.getPhoneNumber(), dto.getAddress(),
-            dto.getProfileStatus());
-        profileRepository.saveAndFlush(updatedProfile);
-        return ProfileResponse.generateProfile(updatedProfile);
-    }
-
-    @Transactional
-    public String deleteProfile(final Long profileNo, final Member member) {
-        log.info("프로필 삭제 시작");
-
-        Profile profile = profileRepository.findById(profileNo)
-            .orElseThrow(() -> new NotFoundProfileException(profileNo));
-
-        checkMatchMemberNo(member, profile);
-
-        List<Profile> profiles = profileRepository.findAllByMember(member);
-
-        if (profiles.size() == MIN_PROFILES_COUNT) {
-            throw new CannotDeleteProfileException(member.getLoginId());
-        }
-
-        profileRepository.delete(profile);
-        log.info("프로필 삭제 완료");
-
-        return profile.getNickname();
-    }
-
-    public ProfileResponse findMainProfile(final Member member) {
-        log.info("{} 의 메인 프로필 조회 시작", member.getLoginId());
-
-        Profile profile =
-            profileRepository.findProfileByMemberAndProfileStatus(member, ProfileStatus.MAIN)
-                .orElseGet(() -> profileRepository.findAllByMember(member)
-                    .stream().findFirst()
-                    .orElseThrow(() -> new EmptyProfileException(member.getLoginId())));
-
-        log.info("{} 의 메인 프로필 조회 완료", member.getLoginId());
 
         return ProfileResponse.generateProfile(profile);
-    }
-
-    public List<ProfileResponse> findProfiles(final Member member) {
-        log.info("{} 의 프로필 조회", member.getLoginId());
-
-        List<ProfileResponse> responses = profileRepository.findAllByMember(member)
-            .stream()
-            .map(ProfileResponse::generateProfile)
-            .toList();
-
-        if (responses.isEmpty()) {
-            throw new EmptyProfileException(member.getLoginId());
-        }
-
-        return responses;
     }
 
     private boolean isMainProfile(final ProfileStatus profileStatus) {
@@ -135,25 +146,25 @@ public class ProfileService {
         return Objects.equals(profileStatus, ProfileStatus.MAIN);
     }
 
-    private void checkMatchMemberNo(final Member member, final Profile profile) {
-        log.info("프로필과 매핑된 회원 식별 번호 확인");
+  private void checkMatchMemberNo(final Member member, final Profile profile) {
+    log.info("프로필과 매핑된 회원 식별 번호 확인");
 
-        Long memberNo = member.getMemberNo();
-        Long profileMemberNo = profile.getMember().getMemberNo();
+    Long memberNo = member.getMemberNo();
+    Long profileMemberNo = profile.getMember().getMemberNo();
 
-        if (isNonMatchMemberNo(memberNo, profileMemberNo)) {
-            throw new NonMatchMemberNoException(memberNo, profileMemberNo);
-        }
+    if (isNonMatchMemberNo(memberNo, profileMemberNo)) {
+      throw new NonMatchMemberNoException(memberNo, profileMemberNo);
     }
+  }
 
-    private boolean isNonMatchMemberNo(final Long memberNo, final Long profileMemberNo) {
-        return !Objects.equals(profileMemberNo, memberNo);
-    }
+  private boolean isNonMatchMemberNo(final Long memberNo, final Long profileMemberNo) {
+    return !Objects.equals(profileMemberNo, memberNo);
+  }
 
-    private ProfileStatus setProfileStatus(final List<Profile> profiles) {
-        log.info("프로필 상태 지정");
-        return profiles.stream()
-            .anyMatch(profile -> profile.getProfileStatus().equals(ProfileStatus.MAIN))
-            ? ProfileStatus.NORMAL : ProfileStatus.MAIN;
-    }
+  private ProfileStatus setProfileStatus(final List<Profile> profiles) {
+    log.info("프로필 상태 지정");
+    return profiles.stream()
+        .anyMatch(profile -> profile.getProfileStatus().equals(ProfileStatus.MAIN))
+        ? ProfileStatus.NORMAL : ProfileStatus.MAIN;
+  }
 }

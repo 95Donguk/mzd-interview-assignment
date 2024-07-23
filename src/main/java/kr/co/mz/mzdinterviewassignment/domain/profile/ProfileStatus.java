@@ -5,16 +5,16 @@ import kr.co.mz.mzdinterviewassignment.exception.status.InvalidStatusException;
 import kr.co.mz.mzdinterviewassignment.exception.status.StatusExceptionCode;
 
 public enum ProfileStatus {
-    MAIN,
-    NORMAL;
+  MAIN,
+  NORMAL;
 
-    @JsonCreator
-    public static ProfileStatus from(String status) {
-        for (ProfileStatus profileStatus : ProfileStatus.values()) {
-            if (profileStatus.name().equals(status)) {
-                return profileStatus;
-            }
-        }
-        throw new InvalidStatusException(StatusExceptionCode.INVALID_PROFILE, status);
+  @JsonCreator
+  public static ProfileStatus from(String status) {
+    for (ProfileStatus profileStatus : ProfileStatus.values()) {
+      if (profileStatus.name().equals(status)) {
+        return profileStatus;
+      }
     }
+    throw new InvalidStatusException(StatusExceptionCode.INVALID_PROFILE, status);
+  }
 }

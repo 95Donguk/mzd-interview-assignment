@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findByLoginId(final String loginId);
+  Optional<Member> findByLoginId(final String loginId);
 
-    Page<Member> findMembersByNameContaining(final String name, final Pageable pageable);
+  Page<Member> findMembersByNameContaining(final String name, final Pageable pageable);
 }
