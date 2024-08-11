@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -112,8 +113,8 @@ public class MemberApiController {
     return CollectionModel.of(memberModels,
         linkTo(methodOn(MemberApiController.class).findMembers(page, size, name)).withSelfRel(),
         linkTo(methodOn(MemberApiController.class).findMembers(page - 1, size, name)).withRel(
-            "prev"),
+            IanaLinkRelations.PREV),
         linkTo(methodOn(MemberApiController.class).findMembers(page + 1, size, name)).withRel(
-            "next"));
+            IanaLinkRelations.NEXT));
   }
 }
